@@ -5,10 +5,14 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import OrderForm from "@/components/OrderForm";
 import BookingForm from "@/components/BookingForm";
+import { useCart } from "@/context/CartContext";
+import { Plus } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function Home() {
+    const { addToCart } = useCart();
+
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
 
@@ -343,6 +347,12 @@ export default function Home() {
                             <p className="text-gray-500 text-sm leading-relaxed mb-6">
                                 Cooked in fresh tomatoes, ginger & green chillies.
                             </p>
+                            <button
+                                onClick={() => addToCart({ id: 'chicken-karahi', name: 'Chicken Karahi', price: '£16.50', image: 'https://images.pexels.com/photos/9609844/pexels-photo-9609844.jpeg?auto=compress&cs=tinysrgb&w=400' })}
+                                className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 border border-white/10 rounded-full text-white text-[10px] font-bold uppercase tracking-widest hover:bg-primary hover:border-primary transition-all duration-300"
+                            >
+                                <Plus className="w-3 h-3" /> Add to Cart
+                            </button>
                         </div>
                         {/* Card 2 */}
                         <div className="group relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 border border-white/5 hover:border-primary/30 mt-0 md:mt-12">
@@ -362,6 +372,12 @@ export default function Home() {
                             <p className="text-gray-500 text-sm leading-relaxed mb-6">
                                 Tender mutton slow-cooked in our secret spices.
                             </p>
+                            <button
+                                onClick={() => addToCart({ id: 'mutton-karahi', name: 'Mutton Karahi', price: '£18.90', image: 'https://images.pexels.com/photos/2474661/pexels-photo-2474661.jpeg?auto=compress&cs=tinysrgb&w=400' })}
+                                className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 border border-white/10 rounded-full text-white text-[10px] font-bold uppercase tracking-widest hover:bg-primary hover:border-primary transition-all duration-300"
+                            >
+                                <Plus className="w-3 h-3" /> Add to Cart
+                            </button>
                         </div>
                         {/* Card 3 */}
                         <div className="group relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 border border-white/5 hover:border-primary/30">
@@ -381,7 +397,22 @@ export default function Home() {
                             <p className="text-gray-500 text-sm leading-relaxed mb-6">
                                 Lamb Chops, Seekh Kebabs & Malai Tikka.
                             </p>
+                            <button
+                                onClick={() => addToCart({ id: 'royal-grill', name: 'Royal Grill', price: '£24.00', image: 'https://images.pexels.com/photos/6210747/pexels-photo-6210747.jpeg?auto=compress&cs=tinysrgb&w=400' })}
+                                className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 border border-white/10 rounded-full text-white text-[10px] font-bold uppercase tracking-widest hover:bg-primary hover:border-primary transition-all duration-300"
+                            >
+                                <Plus className="w-3 h-3" /> Add to Cart
+                            </button>
                         </div>
+                    </div>
+                    <div className="mt-20 text-center">
+                        <a
+                            href="/menu"
+                            className="inline-flex items-center gap-4 px-12 py-5 border border-white/10 text-white font-bold uppercase tracking-widest text-[10px] rounded-full hover:bg-white hover:text-black transition-all duration-500 group"
+                        >
+                            Explore Full Menu
+                            <span className="w-8 h-px bg-primary group-hover:w-12 transition-all duration-500"></span>
+                        </a>
                     </div>
                 </div>
             </section>

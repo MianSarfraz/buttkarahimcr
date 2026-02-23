@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-[#050505]">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Our Heritage | Butt Karahi</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <!-- Noto Nastaliq Urdu Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#E4252B", 
+              dark: "#050505",
+              "card-bg": "#121212",
+            },
+            fontFamily: {
+              display: ["Playfair Display", "serif"],
+              sans: ["Manrope", "sans-serif"],
+              urdu: ["Noto Nastaliq Urdu", "serif"],
+            },
+            boxShadow: {
+                'glow': '0 0 30px rgba(228, 37, 43, 0.4)',
+                'glow-sm': '0 0 10px rgba(228, 37, 43, 0.3)',
+            },
+            animation: {
+                'marquee': 'marquee 25s linear infinite',
+                'spin-slow': 'spin 20s linear infinite',
+            },
+            keyframes: {
+                marquee: {
+                    '0%': { transform: 'translateX(0%)' },
+                    '100%': { transform: 'translateX(-100%)' },
+                }
+            }
+          },
+        },
+      };
+    </script>
+
+    <style>
+        /* Custom Cursor */
+        body { cursor: none; overflow-x: hidden; }
+        .cursor-dot, .cursor-outline {
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 9999; pointer-events: none;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: #E4252B; }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.5); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+        
+        /* Typography Helpers */
+        .logo-text-mimic {
+            font-family: 'Manrope', sans-serif; font-style: italic; font-weight: 900; color: #E4252B;
+            -webkit-text-stroke: 1px white; text-shadow: 2px 2px 0px rgba(255,255,255,0.1);
+        }
+
+        .img-zoom-container { overflow: hidden; }
+        .img-zoom { transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1); }
+        .group:hover .img-zoom { transform: scale(1.1); }
+        
+        #preloader { position: fixed; inset: 0; background: #050505; z-index: 10000; display: flex; justify-content: center; align-items: center; }
+        .loader-line { width: 0%; height: 2px; background: #E4252B; }
+        
+        /* Timeline specific styles */
+        .timeline-marker {
+            box-shadow: 0 0 0 4px #050505;
+        }
+        .timeline-card::before {
+            content: ''; position: absolute; top: 20px; 
+            width: 20px; height: 1px; background: rgba(228, 37, 43, 0.5);
+        }
+        .left-card::before { right: -20px; }
+        .right-card::before { left: -20px; }
+        
+        @media (max-width: 768px) {
+            .timeline-card::before { display: none; }
+        }
+    </style>
+</head>
+<body class="bg-dark text-white font-sans antialiased selection:bg-primary selection:text-white">
+
+    <!-- Cursor -->
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-outline hidden md:block"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="relative flex flex-col items-center">
+            <div class="logo-text-mimic text-5xl mb-4 tracking-tighter">Butt Karahi</div>
+            <div class="w-64 h-[1px] bg-white/10 relative overflow-hidden">
+                <div class="loader-line absolute top-0 left-0 h-full w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 text-white py-4 transition-all duration-300 border-b border-transparent" id="navbar">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 flex items-center justify-between">
+            <a href="index.html" class="group flex flex-col items-start hover-trigger relative z-50">
+                <div class="flex flex-col items-center drop-shadow-md">
+                    <h1 class="logo-text-mimic text-3xl md:text-4xl leading-none">Butt Karahi</h1>
+                    <span class="text-[10px] font-bold uppercase tracking-wide text-white mt-1 shadow-black drop-shadow-md">97 Wilmslow Road - Manchester</span>
+                </div>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-12 text-xs font-bold tracking-[0.2em] uppercase drop-shadow-md">
+                <a href="#menu" class="hover:text-primary transition-colors hover-trigger">Menu</a>
+                <a href="#" class="text-primary transition-colors hover-trigger">Our Story</a>
+                <a href="#gallery-images" class="hover:text-primary transition-colors hover-trigger">Gallery</a>
+                <a href="#locations" class="hover:text-primary transition-colors hover-trigger">Locations</a>
+                <a href="#book" class="border border-white/30 px-6 py-3 rounded-full hover:bg-white hover:text-black transition-all duration-300 hover-trigger shadow-glow-sm hover:shadow-none bg-black/20 backdrop-blur-sm">Book Now</a>
+            </div>
+
+            <button class="md:hidden text-white drop-shadow-md">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="relative h-screen w-full flex items-center justify-center overflow-hidden">
+        <!-- Parallax Background -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjHg-ur5twwbfDNjfgG8ADK6bC5lhCVDBltQl6fqM5llxcy9He3whfMlLws4KoLKn6TrOVu81hFN4vt-kQCbOM0pmQUg5UqOG3Q-LWXjnaADQka6VHVRCK2V8rrHFaY_Z4wPCLimr7kVpuZ3QYgJKmpnAU-wnHrTr42Ql6SidxhtA9F67nv5DnwBGD7S5HlG20zFna184bT_FcRTY1Wo1dXOcBZZ19uanCwpAChVDdgWwZlsfjvQ6I96laMP9pTfBBbXeHImoDcb0" 
+                 class="w-full h-full object-cover opacity-60 scale-110 parallax-bg" alt="Lahore Street">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-[#050505]/60"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+            <span class="text-primary text-xs font-bold tracking-[0.5em] uppercase mb-6 block typing-text">A Legacy Etched in Fire</span>
+            
+            <h1 class="font-display text-6xl md:text-9xl text-white leading-none mb-8 hero-text-anim">
+                Our Heritage <br/><span class="text-primary italic">Story</span>
+            </h1>
+            <p class="text-gray-300 text-lg md:text-xl font-light max-w-2xl mx-auto mb-12 hero-text-anim">
+                A legacy of taste spanning generations, rooted in the heart of Lakshmi Chowk, Lahore. Discover the soul of the Karahi.
+            </p>
+            <div class="animate-bounce">
+                <span class="text-[10px] uppercase tracking-[0.3em] text-white/50 block mb-2">Scroll to Explore</span>
+                <span class="material-icons text-white/50">keyboard_arrow_down</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECTION 2: SECRET BLEND (Now the first content section) -->
+    <section class="relative py-32 bg-[#0a0a0a] border-t border-white/5">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                <div class="lg:col-span-7 relative reveal-trigger">
+                    <div class="relative aspect-video overflow-hidden rounded-sm">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvwV4wAOmeBj2lhOy4gBMPSFDd8Ke-MK_z8CZcr3ixIcbCkqwlrWdxuzKPJwbAEFaJcbnIVJl-8PaMGX0plEkPtM-9BBIfvBn1u73iICf02cEN307v7Srv3OCFOlt3YTkcuvAlufXVwHccR8THghen2o4UuiYteCcG749ZfRJDOtTssn9dXxYvhh0LwF7wxLdG70YdnEtsZ9w7Przi7msEbKdmmGG_mUHG4KypkkRttcjUqzgZMxtg7QVAC1GUBVY34geMX9NbWgc" 
+                             alt="Spices" class="w-full h-full object-cover brightness-75 hover:brightness-100 transition-all duration-700">
+                    </div>
+                    <div class="absolute -bottom-10 -right-6 md:-right-12 bg-card-bg p-8 border border-white/10 max-w-xs shadow-xl hidden md:block">
+                        <h4 class="text-primary font-bold uppercase tracking-widest text-xs mb-2">Heritage Masala</h4>
+                        <p class="text-gray-500 text-xs leading-relaxed">Our blend contains 14 secret spices, aged and roasted in small batches every morning before sunrise.</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 lg:pl-12 reveal-trigger">
+                    <span class="text-primary font-bold tracking-[0.3em] uppercase text-xs">Craft</span>
+                    <h2 class="font-display text-4xl md:text-5xl text-white mt-4 mb-6 italic">The Secret Blend</h2>
+                    <p class="text-gray-400 leading-relaxed font-light mb-6">
+                        It isn't just about heat; it's about the depth of flavor. Our butter and tomato base is slow-cooked until the oils separate, a technique passed down from father to son for over six decades.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: ANIMATED TIMELINE -->
+    <section id="timeline-section" class="py-40 bg-dark relative overflow-hidden">
+        <div class="max-w-[1000px] mx-auto px-6 relative">
+            
+            <!-- Center Line -->
+            <div class="absolute left-6 md:left-1/2 top-0 bottom-0 w-[2px] bg-white/5 md:-translate-x-1/2">
+                <!-- Moving Red Line -->
+                <div class="absolute top-0 left-0 w-full bg-gradient-to-b from-primary via-primary to-transparent timeline-progress h-0"></div>
+            </div>
+
+            <!-- Timeline Item 1 (Left) -->
+            <div class="relative grid grid-cols-1 md:grid-cols-2 gap-12 mb-32 timeline-row">
+                <div class="md:text-right timeline-card left-card opacity-0">
+                    <div class="inline-block p-6 border border-white/10 bg-[#080808] hover:border-primary/50 transition-colors duration-300 relative">
+                        <span class="text-5xl md:text-7xl font-display font-black text-white/10 absolute -top-10 md:-top-12 right-6 md:right-auto md:left-auto select-none">1985</span>
+                        <h3 class="text-white font-bold text-2xl mb-2 mt-4">The Second Hearth</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed">Expansion into the broader districts of Lahore, becoming a household name for Sunday family feasts.</p>
+                    </div>
+                </div>
+                <!-- Dot -->
+                <div class="absolute left-6 md:left-1/2 w-4 h-4 bg-dark border-2 border-white/20 rounded-full -translate-x-1/2 mt-10 z-10 timeline-dot transition-colors duration-500"></div>
+            </div>
+
+            <!-- Timeline Item 2 (Right) -->
+            <div class="relative grid grid-cols-1 md:grid-cols-2 gap-12 mb-32 timeline-row">
+                <div class="hidden md:block"></div> <!-- Spacer -->
+                <div class="timeline-card right-card opacity-0">
+                    <div class="inline-block p-6 border border-white/10 bg-[#080808] hover:border-primary/50 transition-colors duration-300 relative">
+                        <span class="text-5xl md:text-7xl font-display font-black text-white/10 absolute -top-10 md:-top-12 left-6 select-none">2010</span>
+                        <h3 class="text-white font-bold text-2xl mb-2 mt-4">National Footprint</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed">Opening flagship locations in Islamabad and Karachi, bringing the authentic Lahori taste to the entire nation.</p>
+                    </div>
+                </div>
+                <!-- Dot -->
+                <div class="absolute left-6 md:left-1/2 w-4 h-4 bg-dark border-2 border-white/20 rounded-full -translate-x-1/2 mt-10 z-10 timeline-dot transition-colors duration-500"></div>
+            </div>
+
+            <!-- Timeline Item 3 (Left) -->
+            <div class="relative grid grid-cols-1 md:grid-cols-2 gap-12 timeline-row">
+                <div class="md:text-right timeline-card left-card opacity-0">
+                    <div class="inline-block p-6 border border-white/10 bg-[#080808] hover:border-primary/50 transition-colors duration-300 relative">
+                        <span class="text-5xl md:text-7xl font-display font-black text-white/10 absolute -top-10 md:-top-12 right-6 md:right-auto md:left-auto select-none">2023</span>
+                        <h3 class="text-white font-bold text-2xl mb-2 mt-4">Modern Rebirth</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed">Redefining the dining experience with premium interiors while keeping the original 1960 recipe unchanged.</p>
+                    </div>
+                </div>
+                <!-- Dot -->
+                <div class="absolute left-6 md:left-1/2 w-4 h-4 bg-dark border-2 border-white/20 rounded-full -translate-x-1/2 mt-10 z-10 timeline-dot transition-colors duration-500"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 4: SIZZLING KARAHI -->
+    <section class="relative py-32 overflow-hidden bg-[#050505]">
+        <!-- Glow Effect -->
+        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 blur-[150px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                
+                <!-- Text (Left) -->
+                <div class="lg:w-1/2 reveal-trigger">
+                    <h2 class="font-display text-6xl md:text-8xl text-white leading-none mb-8">
+                        The <br/><span class="italic">Sizzling</span><br/><span class="text-primary font-black">Karahi</span>
+                    </h2>
+                    
+                    <div class="space-y-8 mt-12">
+                        <div class="flex gap-6">
+                            <span class="material-icons text-primary text-3xl">restaurant</span>
+                            <div>
+                                <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-2">Fresh Meat Only</h4>
+                                <p class="text-gray-500 text-sm max-w-sm">We never freeze. Our meat is sourced daily from local farmers who meet our strict quality standards.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6">
+                            <span class="material-icons text-primary text-3xl">local_fire_department</span>
+                            <div>
+                                <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-2">Open Flame Cooking</h4>
+                                <p class="text-gray-500 text-sm max-w-sm">Each dish is cooked on high-intensity open flames to achieve that signature smoky char.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image (Right) -->
+                <div class="lg:w-1/2 relative reveal-trigger">
+                    <div class="relative rounded-full aspect-square w-full max-w-lg mx-auto overflow-hidden border-4 border-white/5 shadow-glow">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbjfiZyW9Jn43jAbvTOt_J81oMFMGaJu_q2YFxLKA8PFHX36qU8YRRK8_Sll14IItqXw3gWgmnA0q0HXhPZ59mG704sJzHGn3bOXCWuW9m4nvLWTUn_5EFbHyjbArJUWFI7yCoghozP9ovck9JGeQAShelw2PuWHjBdT4qDHCFXaj18HCCcp8gOvI1aGSDcj2PMnZ_8ec-1li_RSRq52E-EqYrlNmFYuLfN6KTrTRLfg-PAW85Hbdc7lrWler5Bxf64rH8sL1yptI" 
+                             alt="Sizzling Karahi" class="w-full h-full object-cover animate-spin-slow hover:pause">
+                    </div>
+                    <!-- Hotspot -->
+                    <div class="absolute top-[20%] right-[20%] group">
+                        <div class="w-4 h-4 bg-primary rounded-full animate-ping absolute"></div>
+                        <div class="w-4 h-4 bg-primary rounded-full relative cursor-pointer"></div>
+                        <div class="absolute right-6 top-0 w-48 bg-white text-black p-3 text-[10px] uppercase font-bold tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                            Fresh Ginger & Chillies
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: RED CTA STRIP -->
+    <section class="py-32 bg-primary relative overflow-hidden">
+        <!-- Marquee Background -->
+        <div class="absolute top-1/2 -translate-y-1/2 w-full opacity-10 pointer-events-none whitespace-nowrap overflow-hidden">
+            <div class="inline-block animate-marquee">
+                <span class="text-[15vw] font-black italic font-display text-black mr-12">HERITAGE HERITAGE HERITAGE HERITAGE</span>
+                <span class="text-[15vw] font-black italic font-display text-black mr-12">HERITAGE HERITAGE HERITAGE HERITAGE</span>
+            </div>
+        </div>
+
+        <div class="relative z-10 text-center px-6">
+            <h2 class="font-display text-4xl md:text-7xl text-white italic mb-10 drop-shadow-md">Experience the Legacy Tonight</h2>
+            <div class="flex flex-col md:flex-row justify-center gap-6">
+                <a href="#menu" class="px-10 py-4 bg-black text-white font-bold uppercase tracking-[0.2em] text-xs hover:bg-white hover:text-black transition-all duration-300 shadow-xl">
+                    View Full Menu
+                </a>
+                <a href="#book" class="px-10 py-4 bg-white text-primary font-bold uppercase tracking-[0.2em] text-xs hover:bg-black hover:text-white transition-all duration-300 shadow-xl">
+                    Reserve A Table
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#020202] pt-24 pb-12 border-t border-white/5 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+                <div class="space-y-8">
+                    <div>
+                        <div class="logo-text-mimic text-3xl mb-2">Butt Karahi</div>
+                        <p class="text-gray-500 text-sm leading-relaxed mt-4">The gold standard of Pakistani cuisine. Experience the authentic flavor of the wok, mastered over generations.</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all duration-300 group"><span class="material-icons text-sm">facebook</span></a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all duration-300 group"><span class="material-icons text-sm">camera_alt</span></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-display text-lg italic mb-8 flex items-center gap-2"><span class="w-8 h-[1px] bg-primary"></span> Quick Links</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Home</a></li>
+                        <li><a href="#menu" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> The Menu</a></li>
+                        <li><a href="#locations" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Locations</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-display text-lg italic mb-8 flex items-center gap-2"><span class="w-8 h-[1px] bg-primary"></span> Services</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Private Dining</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Catering</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-display text-lg italic mb-8 flex items-center gap-2"><span class="w-8 h-[1px] bg-primary"></span> Contact</h4>
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4"><span class="material-icons text-primary text-sm mt-1">place</span><div><p class="text-white text-sm font-bold uppercase tracking-wide">Manchester</p><p class="text-gray-500 text-xs mt-1">97 Wilmslow Road, M14 5AN</p></div></div>
+                        <div class="flex items-start gap-4"><span class="material-icons text-primary text-sm mt-1">call</span><div><p class="text-white text-sm font-bold uppercase tracking-wide">Reservations</p><p class="text-gray-500 text-xs mt-1">+44 161 123 4567</p></div></div>
+                        <div class="pt-6"><p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Subscribe for Offers</p><form class="flex border-b border-white/20 pb-2 focus-within:border-primary transition-colors"><input type="email" placeholder="Email Address" class="bg-transparent border-none outline-none text-white text-sm w-full placeholder-gray-600"><button type="submit" class="text-gray-400 hover:text-primary transition-colors"><span class="material-icons text-sm">arrow_forward</span></button></form></div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-widest text-gray-600 gap-4">
+                <p>© 2024 Butt Karahi. All Rights Reserved.</p>
+                <div class="flex gap-8"><a href="#" class="hover:text-primary transition-colors">Privacy Policy</a><a href="#" class="hover:text-primary transition-colors">Terms of Service</a></div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl hidden items-center justify-center p-4 opacity-0 transition-opacity duration-500">
+        <div class="bg-card-bg max-w-md w-full rounded-2xl p-10 relative border border-white/10 transform scale-95 transition-transform duration-500" id="modalContent">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-white" onclick="toggleModal(false)">
+                <span class="material-icons">close</span>
+            </button>
+            <h2 class="font-display text-3xl text-white mb-2 text-center">Reserve Table</h2>
+            <div class="w-10 h-1 bg-primary mx-auto mb-8"></div>
+            <form class="space-y-4">
+                <input class="w-full bg-[#0a0a0a] text-white border border-white/10 rounded-lg p-3 focus:border-primary outline-none" type="date"/>
+                <input class="w-full bg-[#0a0a0a] text-white border border-white/10 rounded-lg p-3 focus:border-primary outline-none" type="time"/>
+                <select class="w-full bg-[#0a0a0a] text-white border border-white/10 rounded-lg p-3 focus:border-primary outline-none">
+                    <option>2 Guests</option>
+                    <option>4 Guests</option>
+                </select>
+                <button type="button" class="w-full bg-primary text-white py-4 mt-4 rounded-lg font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors">Confirm</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Preloader Logic
+        window.addEventListener("load", () => {
+            const tl = gsap.timeline();
+            tl.to(".loader-line", { width: "100%", duration: 1.5, ease: "power2.inOut" })
+              .to("#preloader", { y: "-100%", duration: 1, ease: "expo.inOut", delay: 0.2 })
+              .from(".hero-text-anim", { y: 50, opacity: 0, duration: 1.5, stagger: 0.2, ease: "power4.out" }, "-=0.5");
+        });
+
+        // 1. Parallax for Header
+        gsap.to(".parallax-bg", {
+            yPercent: 30,
+            ease: "none",
+            scrollTrigger: {
+                trigger: "header",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
+        // 2. TIMELINE ANIMATION (ADVANCED)
+        // Draw the central line
+        gsap.to(".timeline-progress", {
+            height: "100%",
+            ease: "none",
+            scrollTrigger: {
+                trigger: "#timeline-section",
+                start: "top center",
+                end: "bottom center",
+                scrub: 1
+            }
+        });
+
+        // Animate Cards & Dots
+        const timelineRows = document.querySelectorAll('.timeline-row');
+        timelineRows.forEach((row, index) => {
+            const card = row.querySelector('.timeline-card');
+            const dot = row.querySelector('.timeline-dot');
+            
+            // Slide in Cards
+            gsap.fromTo(card, 
+                { opacity: 0, x: index % 2 === 0 ? -50 : 50 }, 
+                { 
+                    opacity: 1, x: 0, duration: 1, ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: row,
+                        start: "top 70%",
+                    }
+                }
+            );
+
+            // Light up Dots
+            gsap.to(dot, {
+                backgroundColor: "#E4252B",
+                borderColor: "#E4252B",
+                boxShadow: "0 0 15px #E4252B",
+                duration: 0.3,
+                scrollTrigger: {
+                    trigger: row,
+                    start: "top 55%",
+                    toggleActions: "play none none reverse"
+                }
+            });
+        });
+
+        // 3. Other Reveal Animations
+        gsap.utils.toArray(".reveal-trigger").forEach(section => {
+            gsap.from(section.children, { 
+                y: 50, 
+                opacity: 0, 
+                duration: 1, 
+                stagger: 0.1, 
+                ease: "power3.out", 
+                scrollTrigger: { 
+                    trigger: section, 
+                    start: "top 80%" 
+                } 
+            });
+        });
+
+        // Cursor Logic
+        const cursorDot = document.querySelector(".cursor-dot");
+        const cursorOutline = document.querySelector(".cursor-outline");
+        window.addEventListener("mousemove", (e) => {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
+        });
+        document.querySelectorAll(".hover-trigger").forEach(trigger => {
+            trigger.addEventListener("mouseenter", () => {
+                cursorOutline.style.width = "60px"; cursorOutline.style.height = "60px";
+                cursorOutline.style.backgroundColor = "rgba(228, 37, 43, 0.1)"; cursorOutline.style.borderColor = "transparent";
+            });
+            trigger.addEventListener("mouseleave", () => {
+                cursorOutline.style.width = "40px"; cursorOutline.style.height = "40px";
+                cursorOutline.style.backgroundColor = "transparent"; cursorOutline.style.borderColor = "rgba(255, 255, 255, 0.5)";
+            });
+        });
+
+        // Modal Logic
+        function toggleModal(show) {
+            const modal = document.getElementById('bookingModal');
+            const content = document.getElementById('modalContent');
+            if (show) {
+                modal.classList.remove('hidden', 'flex'); modal.classList.add('flex');
+                setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); content.classList.add('scale-100'); }, 10);
+            } else {
+                modal.classList.add('opacity-0'); content.classList.remove('scale-100'); content.classList.add('scale-95');
+                setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 500);
+            }
+        }
+        document.querySelector('a[href="#book"]').addEventListener('click', (e) => { e.preventDefault(); toggleModal(true); });
+
+        // Navbar bg Logic
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if(window.scrollY > 50) {
+                nav.classList.add('backdrop-blur-md', 'bg-black/80', 'border-white/10'); nav.classList.remove('border-transparent');
+            } else {
+                nav.classList.remove('backdrop-blur-md', 'bg-black/80', 'border-white/10'); nav.classList.add('border-transparent');
+            }
+        });
+    </script>
+</body>
+</html>

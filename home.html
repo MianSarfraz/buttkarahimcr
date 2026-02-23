@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-[#050505]">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Butt Karahi | Authentic Dining</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <!-- Noto Nastaliq Urdu Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#E4252B", 
+              dark: "#050505",
+              "card-bg": "#121212",
+            },
+            fontFamily: {
+              display: ["Playfair Display", "serif"],
+              sans: ["Manrope", "sans-serif"],
+              urdu: ["Noto Nastaliq Urdu", "serif"],
+            },
+            boxShadow: {
+                'glow': '0 0 30px rgba(228, 37, 43, 0.4)',
+                'glow-sm': '0 0 10px rgba(228, 37, 43, 0.3)',
+            },
+            animation: {
+                'spin-slow': 'spin 20s linear infinite',
+            }
+          },
+        },
+      };
+    </script>
+
+    <style>
+        /* Custom Cursor */
+        body { cursor: none; overflow-x: hidden; }
+        .cursor-dot, .cursor-outline {
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 9999; pointer-events: none;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: #E4252B; }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.5); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+        
+        /* Typography Helpers */
+        .logo-text-mimic {
+            font-family: 'Manrope', sans-serif; font-style: italic; font-weight: 900; color: #E4252B;
+            -webkit-text-stroke: 1px white; text-shadow: 2px 2px 0px rgba(255,255,255,0.1);
+        }
+
+        /* Image Zoom & Loader */
+        .img-zoom-container { overflow: hidden; }
+        .img-zoom { transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1); }
+        .group:hover .img-zoom { transform: scale(1.1); }
+        
+        #preloader { position: fixed; inset: 0; background: #050505; z-index: 10000; display: flex; justify-content: center; align-items: center; }
+        .loader-line { width: 0%; height: 2px; background: #E4252B; }
+        
+        /* Hide scrollbar in iframes */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-dark text-white font-sans antialiased selection:bg-primary selection:text-white">
+
+    <!-- Cursor -->
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-outline hidden md:block"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="relative flex flex-col items-center">
+            <div class="logo-text-mimic text-5xl mb-4 tracking-tighter">Butt Karahi</div>
+            <div class="w-64 h-[1px] bg-white/10 relative overflow-hidden">
+                <div class="loader-line absolute top-0 left-0 h-full w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 text-white py-4 transition-all duration-300 border-b border-transparent" id="navbar">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 flex items-center justify-between">
+            <a href="#" class="group flex flex-col items-start hover-trigger relative z-50">
+                <div class="flex flex-col items-center drop-shadow-md">
+                    <h1 class="logo-text-mimic text-3xl md:text-4xl leading-none">Butt Karahi</h1>
+                    <span class="text-[10px] font-bold uppercase tracking-wide text-white mt-1 shadow-black drop-shadow-md">97 Wilmslow Road - Manchester</span>
+                </div>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-12 text-xs font-bold tracking-[0.2em] uppercase drop-shadow-md">
+                <a href="#menu" class="hover:text-primary transition-colors hover-trigger">Menu</a>
+                <a href="#story" class="hover:text-primary transition-colors hover-trigger">Our Story</a>
+                <a href="#gallery-images" class="hover:text-primary transition-colors hover-trigger">Gallery</a>
+                <a href="#locations" class="hover:text-primary transition-colors hover-trigger">Locations</a>
+                <a href="#book" class="border border-white/30 px-6 py-3 rounded-full hover:bg-white hover:text-black transition-all duration-300 hover-trigger shadow-glow-sm hover:shadow-none bg-black/20 backdrop-blur-sm">Book Now</a>
+            </div>
+
+            <button class="md:hidden text-white drop-shadow-md">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-screen w-full overflow-hidden flex items-center justify-center bg-black">
+        
+        <!-- Video Container -->
+        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            <iframe 
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full min-w-[177.77vh] min-h-[56.25vw] object-cover" 
+                src="https://www.youtube.com/embed/6vQJyOY6tX8?autoplay=1&mute=1&controls=0&loop=1&playlist=6vQJyOY6tX8&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1" 
+                title="Hero Video" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+            
+            <!-- Dark Gradient Overlay -->
+            <div class="absolute inset-0 bg-black/20 z-10"></div>
+        </div>
+
+        <div class="relative z-20 text-center px-4 w-full h-full flex flex-col items-center justify-center">
+            
+            <div class="flex flex-col items-center justify-center gap-6 md:gap-10 mt-10">
+                
+                <h1 class="hero-title-anim font-display text-white leading-[0.9] drop-shadow-[0_4px_4px_rgba(0,0,0,0.9)]">
+                    <span class="block text-5xl md:text-8xl lg:text-9xl mb-2">THE MASTER</span>
+                    
+                    <!-- Subtext Row -->
+                    <div class="flex items-center justify-center gap-3 md:gap-6 text-primary drop-shadow-[0_4px_4px_rgba(0,0,0,0.9)]">
+                        <span class="font-light italic text-2xl md:text-5xl self-center pt-2">OF</span>
+                        <span class="font-urdu text-4xl md:text-7xl leading-none">کڑاہی</span>
+                    </div>
+                </h1>
+
+                <!-- Button -->
+                <div class="hero-btn-anim pt-4">
+                    <a href="#menu" class="group relative inline-flex items-center justify-center px-8 py-3 md:px-12 md:py-4 overflow-hidden rounded-full bg-primary text-white transition-all duration-300 hover:scale-105 hover:shadow-glow hover-trigger shadow-xl shadow-black/50 border border-white/20">
+                        <span class="relative text-xs md:text-sm font-bold tracking-[0.2em] uppercase z-10">View Menu</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Our Story Section -->
+    <section id="story" class="relative pt-32 pb-0 bg-dark overflow-hidden">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-20 items-center mb-10 relative z-10">
+            <div class="order-2 md:order-1 space-y-8">
+                <div class="reveal-trigger">
+                    <span class="block text-primary font-bold tracking-[0.3em] text-xs uppercase mb-4">Our Heritage</span>
+                    <h2 class="font-display text-4xl md:text-6xl text-white leading-tight mb-6">
+                        97 Wilmslow Road. <br/> <span class="text-white/40 italic">A Legend is Born.</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg leading-relaxed font-light border-l-2 border-primary/50 pl-6">
+                        In the heart of Manchester's Curry Mile, Butt Karahi stands as a testament to authentic Pakistani culinary tradition. We don't just cook food; we craft an experience using the same iron woks and high flames that have defined our legacy.
+                    </p>
+                </div>
+            </div>
+            <div class="order-1 md:order-2 relative">
+                <div class="relative z-10 img-zoom-container rounded-sm overflow-hidden border-b-4 border-primary shadow-2xl" data-speed="0.8">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYYAxn9zQEpSAfJ9YnWY9BVyF0Z1YUzf9INGyRi8gAs18N9uFYUODYbfwwaD3cRGs6ZhdWwmG3Cfl-_Gg6nfa0ri0hzWojIsTQfJfIjINqL-rzafV8u-yl-K_mhFI-k8ysrraReEtQLYptqzc1ZcgPJaXp5LHkZ_8K2xBgdGGdcg8yYPU399v2x6KMyphK_XS0ipVsJLNPqC9CAIphhYmv5ZN5L4tQuemhVmrKvCUl6yGaZRagTzRbY3_ep9dt_cD4AU2z3WgCqNQ" 
+                         alt="Chef" class="w-full h-[500px] object-cover filter grayscale contrast-125 hover:grayscale-0 transition-all duration-700">
+                </div>
+            </div>
+        </div>
+
+        <!-- Rotating Plates Animation -->
+        <div class="relative w-full py-52 md:py-64 min-h-[80vh] flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-[#050505] via-[#080808] to-[#050505]"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-primary/5 blur-[120px] rounded-full z-0"></div>
+            
+            <div class="relative z-20 text-center mix-blend-screen pointer-events-none mb-4 md:mb-0">
+                <p class="text-primary text-xs font-bold uppercase tracking-[0.5em] mb-2 opacity-80">Experience</p>
+                <h2 class="font-display text-5xl md:text-9xl text-white leading-none tracking-tight">
+                    THE ART<br/>
+                    <div class="flex items-center justify-center gap-2 md:gap-4 text-primary mt-2">
+                        <span class="font-light italic text-2xl md:text-5xl">OF</span>
+                        <span class="font-urdu text-4xl md:text-7xl leading-normal mt-1 md:mt-2">کڑاہی</span>
+                    </div>
+                </h2>
+            </div>
+            
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none z-10">
+                <div id="orbit-ring" class="relative w-[260px] h-[260px] md:w-[800px] md:h-[800px] rounded-full border border-white/5 flex items-center justify-center">
+                    
+                    <!-- Plate 1 -->
+                    <div class="orbit-plate absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 md:w-56 md:h-56">
+                        <div class="w-full h-full rounded-full overflow-hidden border-[2px] md:border-[4px] border-[#151515] shadow-glow relative bg-black">
+                            <img src="https://i.ibb.co/Fb0QfdLK/Gemini-Generated-Image-ydek3xydek3xydek.png" class="w-full h-full object-cover transform scale-110" alt="Special 1">
+                        </div>
+                    </div>
+                    
+                    <!-- Plate 2 -->
+                    <div class="orbit-plate absolute top-[75%] left-[93.3%] -translate-x-1/2 -translate-y-1/2 w-20 h-20 md:w-56 md:h-56">
+                        <div class="w-full h-full rounded-full overflow-hidden border-[2px] md:border-[4px] border-[#151515] shadow-glow relative bg-black">
+                            <img src="https://i.ibb.co/XfhRfcXJ/Gemini-Generated-Image-9hzimg9hzimg9hzi-1.png" class="w-full h-full object-cover transform scale-110" alt="Special 2">
+                        </div>
+                    </div>
+                    
+                    <!-- Plate 3 -->
+                    <div class="orbit-plate absolute top-[75%] left-[6.7%] -translate-x-1/2 -translate-y-1/2 w-20 h-20 md:w-56 md:h-56">
+                         <div class="w-full h-full rounded-full overflow-hidden border-[2px] md:border-[4px] border-[#151515] shadow-glow relative bg-black">
+                            <img src="https://i.ibb.co/TDbpYsDy/Gemini-Generated-Image-9hzimg9hzimg9hzi.png" class="w-full h-full object-cover transform scale-110" alt="Special 3">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 1: Visual Chronicle (IMAGES) - UPDATED 4TH PIC -->
+    <section id="gallery-images" class="bg-[#050505] relative py-20 md:py-32 border-b border-white/5">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-center mb-16 reveal-trigger">
+            <span class="text-primary font-bold tracking-[0.3em] uppercase text-xs">Visual Chronicle</span>
+            <h2 class="font-display text-4xl md:text-7xl text-white mt-4">The Atmosphere</h2>
+        </div>
+
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[300px]">
+            <div class="md:col-span-2 relative group overflow-hidden rounded-xl border border-white/5">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjvg5ilTFw-qoDD5Zh00VwGokKgJn6xboZ8p1x9-b9Mn54Ok6flI-0LMOAoVx7rr-aa4X_YCLfEngma0R6T8qO13Q5wZUDpD3mfRsULFZ8lxFT2sEN6BtBQ7bRduV8wENBeipAFsCcvPe94ChSRXloW8K-CiB_rEhnLEgEyf9P-bZJxCgIVz9ch0W68w0zURhXOeLEHA_6CTC-Q-WL2OaM8SYdvcA_Jyz3-e4V1j7w00XewXUWs8pVhp88QmnwoeoNoA-nIOj76Ik" 
+                     class="w-full h-full object-cover img-zoom transition-transform duration-700">
+            </div>
+            <div class="relative group overflow-hidden rounded-xl border border-white/5">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-8S-Cm8NBkg3mizYHSV7pC_y_vwbX7LQapf1gS1ARr3f9SV56jq1R5eioWZBKWSdm7o8LcJoskHCAVXjshHjtmxZ5WNxBK6rc9TnhWih88Mmo7vDSXC4j5kxuZetXnWUhBTkmXEH8jokh80zkeNGkOXvbESAS3xLRBMc0NitvflB8CVPK69mvZmZzP8kPPEXVWefx8XMLFJO3XTWO5CkSbDJM4nQWgf6CSujPR-taaKkdbSxeLqjUk2jcyLK-u2lP55w8Pjcg_FQ" 
+                     class="w-full h-full object-cover img-zoom">
+            </div>
+            
+            <!-- IMAGE #3 -->
+            <div class="relative group overflow-hidden rounded-xl border border-white/5">
+                 <img src="https://i.ibb.co/23rzfzwr/Gemini-Generated-Image-z5l7hbz5l7hbz5l7.png" 
+                      class="w-full h-full object-cover img-zoom">
+            </div>
+            
+            <!-- IMAGE #4: NEW REPLACEMENT -->
+            <div class="relative group overflow-hidden rounded-xl border border-white/5">
+                <img src="https://i.ibb.co/3qMjdF5/Gemini-Generated-Image-kyahqxkyahqxkyah.png" 
+                     class="w-full h-full object-cover img-zoom">
+            </div>
+
+             <div class="relative group overflow-hidden rounded-xl border border-white/5">
+                <img src="https://i.ibb.co/Fb0QfdLK/Gemini-Generated-Image-ydek3xydek3xydek.png" 
+                     class="w-full h-full object-cover img-zoom">
+            </div>
+             <div class="md:col-span-2 relative group overflow-hidden rounded-xl border border-white/5">
+                <img src="https://i.ibb.co/TDbpYsDy/Gemini-Generated-Image-9hzimg9hzimg9hzi.png" 
+                     class="w-full h-full object-cover img-zoom">
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: Motion Series (YOUTUBE SHORTS GRID) -->
+    <section id="gallery-videos" class="bg-[#020202] relative py-20 md:py-32">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-center mb-16 reveal-trigger">
+            <span class="text-primary font-bold tracking-[0.3em] uppercase text-xs">Live Action</span>
+            <h2 class="font-display text-4xl md:text-7xl text-white mt-4">Motion Series</h2>
+        </div>
+
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <!-- VIDEO 1 -->
+            <div class="relative group overflow-hidden rounded-2xl aspect-[9/16] border border-white/10 hover:border-primary/50 transition-colors duration-500 bg-black">
+                <iframe 
+                    class="w-full h-full" 
+                    src="https://www.youtube.com/embed/258WGh1iBEA?rel=0&controls=1&showinfo=0&loop=1" 
+                    title="Butt Karahi Short 1" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- VIDEO 2 -->
+            <div class="relative group overflow-hidden rounded-2xl aspect-[9/16] border border-white/10 hover:border-primary/50 transition-colors duration-500 bg-black">
+                <iframe 
+                    class="w-full h-full" 
+                    src="https://www.youtube.com/embed/J2o0Y3iFgk8?rel=0&controls=1&showinfo=0&loop=1" 
+                    title="Butt Karahi Short 2" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- VIDEO 3 -->
+            <div class="relative group overflow-hidden rounded-2xl aspect-[9/16] border border-white/10 hover:border-primary/50 transition-colors duration-500 bg-black">
+                <iframe 
+                    class="w-full h-full" 
+                    src="https://www.youtube.com/embed/AHdNn-YuGk0?rel=0&controls=1&showinfo=0&loop=1" 
+                    title="Butt Karahi Short 3" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Menu Section - ROYAL GRILL -->
+    <section id="menu" class="py-32 bg-[#080808]">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12">
+            <div class="text-center mb-24 reveal-trigger">
+                <span class="text-primary font-bold tracking-[0.3em] uppercase text-xs">The Taste</span>
+                <h2 class="font-display text-5xl md:text-7xl mb-4 text-white mt-2">Signatures</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                 <!-- Card 1 -->
+                <div class="group relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 menu-card hover-trigger border border-white/5 hover:border-primary/30">
+                    <div class="w-full h-64 overflow-hidden rounded-xl mb-6 relative">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjvg5ilTFw-qoDD5Zh00VwGokKgJn6xboZ8p1x9-b9Mn54Ok6flI-0LMOAoVx7rr-aa4X_YCLfEngma0R6T8qO13Q5wZUDpD3mfRsULFZ8lxFT2sEN6BtBQ7bRduV8wENBeipAFsCcvPe94ChSRXloW8K-CiB_rEhnLEgEyf9P-bZJxCgIVz9ch0W68w0zURhXOeLEHA_6CTC-Q-WL2OaM8SYdvcA_Jyz3-e4V1j7w00XewXUWs8pVhp88QmnwoeoNoA-nIOj76Ik" alt="Chicken Karahi" class="w-full h-full object-cover img-zoom transform scale-100 group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-display text-2xl text-white italic">Chicken Karahi</h3>
+                        <span class="text-primary font-bold">£16.50</span>
+                    </div>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Cooked in fresh tomatoes, ginger & green chillies.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="group relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 menu-card hover-trigger mt-0 md:mt-12 border border-white/5 hover:border-primary/30">
+                    <div class="w-full h-64 overflow-hidden rounded-xl mb-6 relative">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-8S-Cm8NBkg3mizYHSV7pC_y_vwbX7LQapf1gS1ARr3f9SV56jq1R5eioWZBKWSdm7o8LcJoskHCAVXjshHjtmxZ5WNxBK6rc9TnhWih88Mmo7vDSXC4j5kxuZetXnWUhBTkmXEH8jokh80zkeNGkOXvbESAS3xLRBMc0NitvflB8CVPK69mvZmZzP8kPPEXVWefx8XMLFJO3XTWO5CkSbDJM4nQWgf6CSujPR-taaKkdbSxeLqjUk2jcyLK-u2lP55w8Pjcg_FQ" alt="Mutton Karahi" class="w-full h-full object-cover img-zoom transform scale-100 group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-display text-2xl text-white italic">Mutton Karahi</h3>
+                        <span class="text-primary font-bold">£18.90</span>
+                    </div>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Tender mutton slow-cooked in our secret spices.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="group relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 menu-card hover-trigger border border-white/5 hover:border-primary/30">
+                    <div class="w-full h-64 overflow-hidden rounded-xl mb-6 relative">
+                        <img src="https://i.ibb.co/zhCf9Mfw/Gemini-Generated-Image-xbe523xbe523xbe5.png" alt="Mixed Grill" class="w-full h-full object-cover img-zoom transform scale-100 group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-display text-2xl text-white italic">Royal Grill</h3>
+                        <span class="text-primary font-bold">£24.00</span>
+                    </div>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Lamb Chops, Seekh Kebabs & Malai Tikka.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA: "Taste the Legacy" -->
+    <section class="relative py-40 flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbNDDBZ-m19RH6Fat9fpWUlvtlMHCiCvvkjes3pQLKUYRkR2b-ouBqUzoK-F04X5C9jmc47iGO4r3WKtbv8775_hunWvlYfVz5yGz8886SLGnCQ7Lk9XkDkoMN99DsmqB0X4FTY2h-sbuBEx4qsFCixhbtDV0Ir-quF63aat5MJm6MITWnp-MaUctzYY3hC00zydZ4XYgFhTfbLC_VP5KtyoY9ue7GPknsmzR1Tp3ODYvA6lv4-OXE7p-Jhx8TQu7S7CHWSk-B35g" 
+                 class="w-full h-full object-cover grayscale brightness-[0.4]" data-speed="0.3" alt="Spices">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#020202] via-[#020202]/80 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 w-full max-w-4xl mx-auto px-6 text-center reveal-trigger">
+            <div class="w-16 h-16 border border-primary/50 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
+                <span class="material-icons text-primary">restaurant_menu</span>
+            </div>
+            <h2 class="font-display text-5xl md:text-8xl text-white mb-6 leading-tight">
+                Taste the <br/><span class="text-primary italic">Legacy.</span>
+            </h2>
+            <p class="text-gray-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-light">
+                Join us for an unforgettable evening of high-heat cooking, rich aromas, and the finest company.
+            </p>
+            <a href="#book" class="hover-trigger inline-flex items-center gap-4 px-12 py-5 bg-white text-black font-bold uppercase tracking-widest text-sm rounded-full hover:bg-primary hover:text-white transition-all duration-500 shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_40px_rgba(228,37,43,0.6)]">
+                Reserve Your Table <span class="material-icons text-sm">arrow_forward</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#020202] pt-24 pb-12 border-t border-white/5 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+                <div class="space-y-8">
+                    <div>
+                        <div class="logo-text-mimic text-3xl mb-2">Butt Karahi</div>
+                        <p class="text-gray-500 text-sm leading-relaxed mt-4">The gold standard of Pakistani cuisine. Experience the authentic flavor of the wok, mastered over generations.</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all duration-300 group"><span class="material-icons text-sm">facebook</span></a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all duration-300 group"><span class="material-icons text-sm">camera_alt</span></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-display text-lg italic mb-8 flex items-center gap-2"><span class="w-8 h-[1px] bg-primary"></span> Quick Links</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Home</a></li>
+                        <li><a href="#menu" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> The Menu</a></li>
+                        <li><a href="#locations" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Locations</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-display text-lg italic mb-8 flex items-center gap-2"><span class="w-8 h-[1px] bg-primary"></span> Services</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Private Dining</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Catering</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-display text-lg italic mb-8 flex items-center gap-2"><span class="w-8 h-[1px] bg-primary"></span> Contact</h4>
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4"><span class="material-icons text-primary text-sm mt-1">place</span><div><p class="text-white text-sm font-bold uppercase tracking-wide">Manchester</p><p class="text-gray-500 text-xs mt-1">97 Wilmslow Road, M14 5AN</p></div></div>
+                        <div class="flex items-start gap-4"><span class="material-icons text-primary text-sm mt-1">call</span><div><p class="text-white text-sm font-bold uppercase tracking-wide">Reservations</p><p class="text-gray-500 text-xs mt-1">+44 161 123 4567</p></div></div>
+                        <div class="pt-6"><p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Subscribe for Offers</p><form class="flex border-b border-white/20 pb-2 focus-within:border-primary transition-colors"><input type="email" placeholder="Email Address" class="bg-transparent border-none outline-none text-white text-sm w-full placeholder-gray-600"><button type="submit" class="text-gray-400 hover:text-primary transition-colors"><span class="material-icons text-sm">arrow_forward</span></button></form></div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-widest text-gray-600 gap-4">
+                <p>© 2024 Butt Karahi. All Rights Reserved.</p>
+                <div class="flex gap-8"><a href="#" class="hover:text-primary transition-colors">Privacy Policy</a><a href="#" class="hover:text-primary transition-colors">Terms of Service</a></div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl hidden items-center justify-center p-4 opacity-0 transition-opacity duration-500">
+        <div class="bg-card-bg max-w-md w-full rounded-2xl p-10 relative border border-white/10 transform scale-95 transition-transform duration-500" id="modalContent">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-white" onclick="toggleModal(false)">
+                <span class="material-icons">close</span>
+            </button>
+            <h2 class="font-display text-3xl text-white mb-2 text-center">Reserve Table</h2>
+            <div class="w-10 h-1 bg-primary mx-auto mb-8"></div>
+            <form class="space-y-4">
+                <input class="w-full bg-[#0a0a0a] text-white border border-white/10 rounded-lg p-3 focus:border-primary outline-none" type="date"/>
+                <input class="w-full bg-[#0a0a0a] text-white border border-white/10 rounded-lg p-3 focus:border-primary outline-none" type="time"/>
+                <select class="w-full bg-[#0a0a0a] text-white border border-white/10 rounded-lg p-3 focus:border-primary outline-none">
+                    <option>2 Guests</option>
+                    <option>4 Guests</option>
+                </select>
+                <button type="button" class="w-full bg-primary text-white py-4 mt-4 rounded-lg font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors">Confirm</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Preloader
+        window.addEventListener("load", () => {
+            const tl = gsap.timeline();
+            tl.to(".loader-line", { width: "100%", duration: 1.5, ease: "power2.inOut" })
+              .to("#preloader", { y: "-100%", duration: 1, ease: "expo.inOut", delay: 0.2 })
+              .from(".hero-title-anim", { y: 100, opacity: 0, duration: 1.2, ease: "power4.out" }, "-=0.5")
+              .from(".hero-text-anim", { y: 20, opacity: 0, duration: 1, ease: "power2.out" }, "-=1");
+        });
+
+        // ROTATING PLATES
+        gsap.to("#orbit-ring", { rotation: 360, duration: 50, repeat: -1, ease: "none" });
+        gsap.utils.toArray(".orbit-plate").forEach(plate => {
+            gsap.to(plate, { rotation: -360, duration: 50, repeat: -1, ease: "none" });
+        });
+
+        // Cursor & Interactions
+        const cursorDot = document.querySelector(".cursor-dot");
+        const cursorOutline = document.querySelector(".cursor-outline");
+        window.addEventListener("mousemove", (e) => {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
+        });
+        document.querySelectorAll(".hover-trigger").forEach(trigger => {
+            trigger.addEventListener("mouseenter", () => {
+                cursorOutline.style.width = "60px"; cursorOutline.style.height = "60px";
+                cursorOutline.style.backgroundColor = "rgba(228, 37, 43, 0.1)"; cursorOutline.style.borderColor = "transparent";
+            });
+            trigger.addEventListener("mouseleave", () => {
+                cursorOutline.style.width = "40px"; cursorOutline.style.height = "40px";
+                cursorOutline.style.backgroundColor = "transparent"; cursorOutline.style.borderColor = "rgba(255, 255, 255, 0.5)";
+            });
+        });
+
+        // Standard Scroll Triggers
+        gsap.utils.toArray("[data-speed]").forEach(el => {
+            gsap.to(el, { y: (i, target) => -100 * target.dataset.speed, ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 0 } });
+        });
+        gsap.utils.toArray(".reveal-trigger").forEach(section => {
+            gsap.from(section.children, { y: 50, opacity: 0, duration: 1, stagger: 0.2, ease: "power3.out", scrollTrigger: { trigger: section, start: "top 80%" } });
+        });
+
+        // Modal
+        function toggleModal(show) {
+            const modal = document.getElementById('bookingModal');
+            const content = document.getElementById('modalContent');
+            if (show) {
+                modal.classList.remove('hidden', 'flex'); modal.classList.add('flex');
+                setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); content.classList.add('scale-100'); }, 10);
+            } else {
+                modal.classList.add('opacity-0'); content.classList.remove('scale-100'); content.classList.add('scale-95');
+                setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 500);
+            }
+        }
+        document.querySelector('a[href="#book"]').addEventListener('click', (e) => { e.preventDefault(); toggleModal(true); });
+
+        // Navbar bg
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if(window.scrollY > 50) {
+                nav.classList.add('backdrop-blur-md', 'bg-black/80', 'border-white/10'); nav.classList.remove('border-transparent');
+            } else {
+                nav.classList.remove('backdrop-blur-md', 'bg-black/80', 'border-white/10'); nav.classList.add('border-transparent');
+            }
+        });
+    </script>
+</body>
+</html>

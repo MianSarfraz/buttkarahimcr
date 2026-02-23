@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-[#050505]">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Gallery | Butt Karahi</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <!-- Noto Nastaliq Urdu Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Flip.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#E4252B", 
+              dark: "#050505",
+              "card-bg": "#121212",
+            },
+            fontFamily: {
+              display: ["Playfair Display", "serif"],
+              sans: ["Manrope", "sans-serif"],
+              urdu: ["Noto Nastaliq Urdu", "serif"],
+            },
+            boxShadow: {
+                'glow': '0 0 30px rgba(228, 37, 43, 0.4)',
+                'glow-sm': '0 0 10px rgba(228, 37, 43, 0.3)',
+            },
+            animation: {
+                'spin-slow': 'spin 20s linear infinite',
+            }
+          },
+        },
+      };
+    </script>
+
+    <style>
+        /* Custom Cursor */
+        body { cursor: none; overflow-x: hidden; }
+        .cursor-dot, .cursor-outline {
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 9999; pointer-events: none;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: #E4252B; }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.5); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+        
+        /* Typography Helpers */
+        .logo-text-mimic {
+            font-family: 'Manrope', sans-serif; font-style: italic; font-weight: 900; color: #E4252B;
+            -webkit-text-stroke: 1px white; text-shadow: 2px 2px 0px rgba(255,255,255,0.1);
+        }
+
+        /* Image Zoom & Loader */
+        .img-zoom-container { overflow: hidden; }
+        .img-zoom { transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1); }
+        .group:hover .img-zoom { transform: scale(1.1); }
+        
+        #preloader { position: fixed; inset: 0; background: #050505; z-index: 10000; display: flex; justify-content: center; align-items: center; }
+        .loader-line { width: 0%; height: 2px; background: #E4252B; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #E4252B; }
+
+        /* Masonry Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+                grid-auto-rows: 300px;
+            }
+            .grid-wide { grid-column: span 2; }
+            .grid-tall { grid-row: span 2; }
+        }
+
+        /* Video Playlist Styling */
+        .active-video {
+            border-color: #E4252B !important;
+            background-color: rgba(228, 37, 43, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-dark text-white font-sans antialiased selection:bg-primary selection:text-white">
+
+    <!-- Cursor -->
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-outline hidden md:block"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="relative flex flex-col items-center">
+            <div class="logo-text-mimic text-5xl mb-4 tracking-tighter">Butt Karahi</div>
+            <div class="w-64 h-[1px] bg-white/10 relative overflow-hidden">
+                <div class="loader-line absolute top-0 left-0 h-full w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 text-white py-4 transition-all duration-300 border-b border-transparent" id="navbar">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 flex items-center justify-between">
+            <a href="index.html" class="group flex flex-col items-start hover-trigger relative z-50">
+                <div class="flex flex-col items-center drop-shadow-md">
+                    <h1 class="logo-text-mimic text-3xl md:text-4xl leading-none">Butt Karahi</h1>
+                    <span class="text-[10px] font-bold uppercase tracking-wide text-white mt-1 shadow-black drop-shadow-md">97 Wilmslow Road - Manchester</span>
+                </div>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-12 text-xs font-bold tracking-[0.2em] uppercase drop-shadow-md">
+                <a href="#menu" class="hover:text-primary transition-colors hover-trigger">Menu</a>
+                <a href="#" class="hover:text-primary transition-colors hover-trigger">Our Story</a>
+                <a href="#" class="text-primary transition-colors hover-trigger">Gallery</a>
+                <a href="#locations" class="hover:text-primary transition-colors hover-trigger">Locations</a>
+                <a href="#book" class="border border-white/30 px-6 py-3 rounded-full hover:bg-white hover:text-black transition-all duration-300 hover-trigger shadow-glow-sm hover:shadow-none bg-black/20 backdrop-blur-sm">Book Now</a>
+            </div>
+
+            <button class="md:hidden text-white drop-shadow-md">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- GALLERY HERO -->
+    <header class="relative h-[60vh] w-full flex items-end justify-start overflow-hidden bg-[#050505] border-b border-white/5">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-12 pb-20">
+            <div class="flex flex-col md:flex-row justify-between items-end gap-10">
+                <div class="hero-text-anim">
+                    <span class="text-primary text-xs font-bold tracking-[0.5em] uppercase mb-4 block">Visual Archive</span>
+                    <h1 class="font-display text-5xl md:text-8xl text-white leading-none tracking-tight">
+                        The Art of <br/><span class="text-primary italic">Ambiance.</span>
+                    </h1>
+                </div>
+                
+                <div class="flex flex-wrap gap-4 hero-text-anim">
+                    <button class="filter-btn active px-6 py-2 border border-primary bg-primary text-white text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-300 hover:bg-white hover:text-black hover:border-white" data-filter="all">All</button>
+                    <button class="filter-btn px-6 py-2 border border-white/20 text-white/70 text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-300 hover:border-primary hover:text-primary" data-filter="interiors">Interiors</button>
+                    <button class="filter-btn px-6 py-2 border border-white/20 text-white/70 text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-300 hover:border-primary hover:text-primary" data-filter="food">Signature Dishes</button>
+                    <button class="filter-btn px-6 py-2 border border-white/20 text-white/70 text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-300 hover:border-primary hover:text-primary" data-filter="kitchen">The Kitchen</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECTION 1: VISUAL AMBIANCE (IMAGES) -->
+    <section class="py-20 bg-dark relative">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12">
+            
+            <div class="gallery-grid" id="gallery-container">
+                
+                <!-- 1. Wide - Food -->
+                <div class="gallery-item grid-wide group relative overflow-hidden rounded-sm bg-[#121212] cursor-pointer" data-category="food">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVGz3q8K-yO9-yCL6TisyB0XoLxaX-CXTRhp-Q60HqhKL8bim6eZ7gNDK5wtz6OFdrFKjI6FoyVr4kNz5FnDyUUkaLGqYnl5aLCds9c7nZl81hr0jHRTwwZ4y-m6aFEs3Yg22T8Zoux3Zn94toBMQwhpl-83HtBqxpPTqHOSnZNqE14OlRA2oG6_EQi8OhlDWcktIqzYEGzqLVS7JUG-VmhmNBiMHPsB8EwmPrQlGwqPAebS0aVGuj-SSeVouMh4VatUsnbmdi4RE" 
+                         class="w-full h-full object-cover img-zoom transition-transform duration-700 opacity-80 group-hover:opacity-100" alt="Mutton Karahi">
+                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">
+                        <span class="text-primary text-[10px] font-bold uppercase tracking-widest block mb-1">Signature</span>
+                        <h3 class="text-white font-display text-2xl italic">Mutton Karahi</h3>
+                    </div>
+                </div>
+
+                <!-- 2. Tall - Kitchen -->
+                <div class="gallery-item grid-tall group relative overflow-hidden rounded-sm bg-[#121212] cursor-pointer" data-category="kitchen">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2Wpih2y0Jj1U8bZWG_rU5rw2M4klvSt0Lj8_wx6_GHB8Rb0mU5pg-j83YlynD8vtvFBFsytw2iogbE_URfQiyPnmEpcd6OLtl8hpJ1HvLHknVtD7w-zeiCAhxZ4EUW3Qzf69jL2_P5FY-5n1231eRmoShM6COfQh0jxDrsPOjKAl-D19FmrFXGAQKI9TbNkZ0vEaOYskaiyHA_Rd71nr-SLYagspe98epXp7dRJFB8OnA01fbv5h_iZPjQR0jyBk6-QZzdQ2mF-4" 
+                         class="w-full h-full object-cover img-zoom transition-transform duration-700 opacity-80 group-hover:opacity-100" alt="Tandoor">
+                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">
+                        <span class="text-primary text-[10px] font-bold uppercase tracking-widest block mb-1">Craft</span>
+                        <h3 class="text-white font-display text-2xl italic">Live Tandoor</h3>
+                    </div>
+                </div>
+
+                <!-- 3. Standard - Interior -->
+                <div class="gallery-item group relative overflow-hidden rounded-sm bg-[#121212] cursor-pointer" data-category="interiors">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTWPLGimlS69j82o0mVh--4mBqbVTJDngisz_CssnHuzFr5VRb7wi5tNFGYXe2Rg7bXhMNGUG6iQ1uRkqgUSmzV4mjR1u5SJdWO3oUQZ7q-M6bm4ONEaezsaLPeSdppgkPWPwUqnyrrxGZ1qBxioUjq8qF_Tj85iR6z1kAgYX6HfKC-VqZB8RQtsj7VYwBWbtoqnIjJhKqDIKKUYZq9Z0BvgN2GS-MT12WEY6Vd-jFk0VyamIqLc5qBAGv6L9lFjbKCfhIdtUEHoA" 
+                         class="w-full h-full object-cover img-zoom transition-transform duration-700 opacity-80 group-hover:opacity-100" alt="Interior">
+                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">
+                        <h3 class="text-white font-display text-xl italic">Evening Mood</h3>
+                    </div>
+                </div>
+
+                <!-- 4. Standard - Food -->
+                <div class="gallery-item group relative overflow-hidden rounded-sm bg-[#121212] cursor-pointer" data-category="food">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuClfO27jffQogQD0NIwvWjWC1c_e7E_VEJKu56oaExIy8oQqKwTE4QaEJRRznm6RXWeXOuaEjOmIXQXGtKv1d4X3dnZiapKrNrJty-1U_Iik6DnIg4Q3etWOpq6L5nL_S5KK3MkFvGPr8H9n9vjIm345FSpHri1FqGmTEqwJKvrSI-WAHK48q8_kVD_Ns9nbs38PGg6-nPfpNi74tHQITe0DdAPaBiEK2rJDAwlX5ksIlABXNYg9Ida3_reWg8spO4BK-DO9AJLPmQ" 
+                         class="w-full h-full object-cover img-zoom transition-transform duration-700 opacity-80 group-hover:opacity-100" alt="Spices">
+                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">
+                        <h3 class="text-white font-display text-xl italic">Secret Blend</h3>
+                    </div>
+                </div>
+
+                <!-- 5. Wide - Food -->
+                <div class="gallery-item grid-wide group relative overflow-hidden rounded-sm bg-[#121212] cursor-pointer" data-category="food">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAq81QUQMMs7tHevOLWjUrzqRkKJ7HtmgldL8VnrNCVl7O_a22uDBDvEAnY-xMw0K577oHPWFaCNNAPM7QnNDwUjjW1xU7hc3CUwRa7L0hQrZ5OWvvaJegP5jAGVEHvDYZQcbsAC1UyEFt5mhfjJxP0yx-tfRwaGQkmPM1GUzL3MK4HvxOfze__DFA4sZYklC6XGJRlbW7KH7tPgbfxeL9pq3_iDustX58ve6c9Y7VmSr0Eqzp1eA-VwnPnrHEAlhovJD49zeEqwOg" 
+                         class="w-full h-full object-cover img-zoom transition-transform duration-700 opacity-80 group-hover:opacity-100" alt="Table Spread">
+                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">
+                        <span class="text-primary text-[10px] font-bold uppercase tracking-widest block mb-1">Experience</span>
+                        <h3 class="text-white font-display text-2xl italic">Royal Feast</h3>
+                    </div>
+                </div>
+
+                 <!-- 6. Standard - Kitchen -->
+                 <div class="gallery-item group relative overflow-hidden rounded-sm bg-[#121212] cursor-pointer" data-category="kitchen">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1y7MiuR1Q3Yt1EpW7hbyrPxFsZKU8F39SSbmQKdipffujZdtvNYtShqLII5fvaai-VIDI1nIrd4CUSme91sFARa-j0Z2RyhCVnXUAeAsKn3Nemy9S5SDPlvnGiSuKPQvBKhcsd1NLA8tRWhZJX4wrItB44JV6RSSYj64pKvAyaVMDCiNO7Jtxbe2p2uC3VXttn0-4XRqaZjvN5iQl5iY9MIMPoSBeCA4VvghYBejUOdKlvYbigFzj0PYnU6rSjuU4WYe7_tKyY_E" 
+                         class="w-full h-full object-cover img-zoom transition-transform duration-700 opacity-80 group-hover:opacity-100" alt="Chef">
+                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">
+                        <h3 class="text-white font-display text-xl italic">Fire & Iron</h3>
+                    </div>
+                </div>
+
+                <!-- 7. Tall - Interiors -->
+                <div class="gallery-item grid-tall group relative overflow-hidden rounded-sm bg-[#121212] cursor-pointer" data-category="interiors">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1000&auto=format&fit=crop" 
+                         class="w-full h-full object-cover img-zoom transition-transform duration-700 opacity-80 group-hover:opacity-100 grayscale hover:grayscale-0" alt="Dining Hall">
+                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">
+                        <span class="text-primary text-[10px] font-bold uppercase tracking-widest block mb-1">Venue</span>
+                        <h3 class="text-white font-display text-2xl italic">The Dining Hall</h3>
+                    </div>
+                </div>
+
+                <!-- 8. Wide - Food -->
+                <div class="gallery-item grid-wide group relative overflow-hidden rounded-sm bg-[#121212] cursor-pointer" data-category="food">
+                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1000&auto=format&fit=crop" 
+                         class="w-full h-full object-cover img-zoom transition-transform duration-700 opacity-80 group-hover:opacity-100" alt="BBQ">
+                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">
+                        <h3 class="text-white font-display text-2xl italic">Live BBQ</h3>
+                    </div>
+                </div>
+
+                <!-- 9. Standard - Kitchen -->
+                <div class="gallery-item group relative overflow-hidden rounded-sm bg-[#121212] cursor-pointer" data-category="kitchen">
+                    <img src="https://images.unsplash.com/photo-1595295333158-4742f28fbd85?q=80&w=800&auto=format&fit=crop" 
+                         class="w-full h-full object-cover img-zoom transition-transform duration-700 opacity-80 group-hover:opacity-100" alt="Prep">
+                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">
+                        <h3 class="text-white font-display text-xl italic">Preparation</h3>
+                    </div>
+                </div>
+
+                <!-- 10. Standard - Food -->
+                <div class="gallery-item group relative overflow-hidden rounded-sm bg-[#121212] cursor-pointer" data-category="food">
+                    <img src="https://images.unsplash.com/photo-1626804475297-411dbe631260?q=80&w=800&auto=format&fit=crop" 
+                         class="w-full h-full object-cover img-zoom transition-transform duration-700 opacity-80 group-hover:opacity-100" alt="Naan">
+                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">
+                        <h3 class="text-white font-display text-xl italic">Fresh Roghni</h3>
+                    </div>
+                </div>
+
+                <!-- 11. Wide - Interiors -->
+                <div class="gallery-item grid-wide group relative overflow-hidden rounded-sm bg-[#121212] cursor-pointer" data-category="interiors">
+                    <img src="https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?q=80&w=1000&auto=format&fit=crop" 
+                         class="w-full h-full object-cover img-zoom transition-transform duration-700 opacity-80 group-hover:opacity-100 grayscale hover:grayscale-0" alt="Seating">
+                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">
+                        <h3 class="text-white font-display text-2xl italic">Private Dining</h3>
+                    </div>
+                </div>
+
+                <!-- 12. Standard - Kitchen -->
+                <div class="gallery-item group relative overflow-hidden rounded-sm bg-[#121212] cursor-pointer" data-category="kitchen">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=800&auto=format&fit=crop" 
+                         class="w-full h-full object-cover img-zoom transition-transform duration-700 opacity-80 group-hover:opacity-100" alt="Plating">
+                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">
+                        <h3 class="text-white font-display text-xl italic">The Finish</h3>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: MOTION SERIES (PLAYLIST STYLE) -->
+    <section class="py-20 bg-[#080808] border-t border-white/5 relative overflow-hidden">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12">
+            
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 reveal-trigger">
+                <div>
+                    <span class="text-primary text-xs font-bold tracking-[0.3em] uppercase block mb-4">Motion Series</span>
+                    <h2 class="font-display text-4xl md:text-6xl text-white">Live Action</h2>
+                </div>
+            </div>
+
+            <!-- Master-Detail Layout -->
+            <div class="flex flex-col lg:flex-row gap-10">
+                
+                <!-- Main Player (Left) -->
+                <div class="w-full lg:w-2/3 h-[500px] md:h-[600px] bg-black rounded-2xl overflow-hidden border border-white/10 shadow-glow relative">
+                    <iframe id="main-player" class="w-full h-full" src="https://www.youtube.com/embed/258WGh1iBEA?enablejsapi=1&rel=0&modestbranding=1" title="Main Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+
+                <!-- Playlist (Right) -->
+                <div class="w-full lg:w-1/3 flex flex-col gap-4 h-[600px] overflow-y-auto pr-2">
+                    
+                    <!-- Playlist Item 1 -->
+                    <div class="video-item active-video flex items-center gap-4 p-4 rounded-xl bg-[#121212] border border-white/5 hover:border-primary/50 cursor-pointer transition-all duration-300 group" onclick="playVideo('258WGh1iBEA', this)">
+                        <div class="relative w-24 h-32 flex-shrink-0 rounded-lg overflow-hidden">
+                            <img src="https://img.youtube.com/vi/258WGh1iBEA/hqdefault.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Thumb">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/40">
+                                <span class="material-icons text-white text-2xl group-hover:text-primary transition-colors">play_circle</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm leading-tight mb-2 group-hover:text-primary transition-colors">Sizzling Mutton Karahi</h4>
+                            <p class="text-gray-500 text-xs">Signature Preparation</p>
+                        </div>
+                    </div>
+
+                    <!-- Playlist Item 2 -->
+                    <div class="video-item flex items-center gap-4 p-4 rounded-xl bg-[#121212] border border-white/5 hover:border-primary/50 cursor-pointer transition-all duration-300 group" onclick="playVideo('J2o0Y3iFgk8', this)">
+                        <div class="relative w-24 h-32 flex-shrink-0 rounded-lg overflow-hidden">
+                            <img src="https://img.youtube.com/vi/J2o0Y3iFgk8/hqdefault.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Thumb">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/40">
+                                <span class="material-icons text-white text-2xl group-hover:text-primary transition-colors">play_circle</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm leading-tight mb-2 group-hover:text-primary transition-colors">Live Tandoor Action</h4>
+                            <p class="text-gray-500 text-xs">Fresh Naan Making</p>
+                        </div>
+                    </div>
+
+                    <!-- Playlist Item 3 -->
+                    <div class="video-item flex items-center gap-4 p-4 rounded-xl bg-[#121212] border border-white/5 hover:border-primary/50 cursor-pointer transition-all duration-300 group" onclick="playVideo('AHdNn-YuGk0', this)">
+                        <div class="relative w-24 h-32 flex-shrink-0 rounded-lg overflow-hidden">
+                            <img src="https://img.youtube.com/vi/AHdNn-YuGk0/hqdefault.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Thumb">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/40">
+                                <span class="material-icons text-white text-2xl group-hover:text-primary transition-colors">play_circle</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm leading-tight mb-2 group-hover:text-primary transition-colors">The Perfect Garnish</h4>
+                            <p class="text-gray-500 text-xs">Finishing Touches</p>
+                        </div>
+                    </div>
+
+                    <!-- Playlist Item 4 -->
+                    <div class="video-item flex items-center gap-4 p-4 rounded-xl bg-[#121212] border border-white/5 hover:border-primary/50 cursor-pointer transition-all duration-300 group" onclick="playVideo('258WGh1iBEA', this)">
+                        <div class="relative w-24 h-32 flex-shrink-0 rounded-lg overflow-hidden">
+                            <img src="https://img.youtube.com/vi/258WGh1iBEA/hqdefault.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Thumb">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/40">
+                                <span class="material-icons text-white text-2xl group-hover:text-primary transition-colors">play_circle</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm leading-tight mb-2 group-hover:text-primary transition-colors">Evening Ambiance</h4>
+                            <p class="text-gray-500 text-xs">Dining Experience</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER (EXACTLY FROM HOME PAGE) -->
+    <footer class="bg-[#020202] pt-24 pb-12 border-t border-white/5 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+                <div class="space-y-8">
+                    <div>
+                        <div class="logo-text-mimic text-3xl mb-2">Butt Karahi</div>
+                        <p class="text-gray-500 text-sm leading-relaxed mt-4">The gold standard of Pakistani cuisine. Experience the authentic flavor of the wok, mastered over generations.</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all duration-300 group"><span class="material-icons text-sm">facebook</span></a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all duration-300 group"><span class="material-icons text-sm">camera_alt</span></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-display text-lg italic mb-8 flex items-center gap-2"><span class="w-8 h-[1px] bg-primary"></span> Quick Links</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Home</a></li>
+                        <li><a href="#menu" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> The Menu</a></li>
+                        <li><a href="#locations" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Locations</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-display text-lg italic mb-8 flex items-center gap-2"><span class="w-8 h-[1px] bg-primary"></span> Services</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Private Dining</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Catering</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-display text-lg italic mb-8 flex items-center gap-2"><span class="w-8 h-[1px] bg-primary"></span> Contact</h4>
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4"><span class="material-icons text-primary text-sm mt-1">place</span><div><p class="text-white text-sm font-bold uppercase tracking-wide">Manchester</p><p class="text-gray-500 text-xs mt-1">97 Wilmslow Road, M14 5AN</p></div></div>
+                        <div class="flex items-start gap-4"><span class="material-icons text-primary text-sm mt-1">call</span><div><p class="text-white text-sm font-bold uppercase tracking-wide">Reservations</p><p class="text-gray-500 text-xs mt-1">+44 161 123 4567</p></div></div>
+                        <div class="pt-6"><p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Subscribe for Offers</p><form class="flex border-b border-white/20 pb-2 focus-within:border-primary transition-colors"><input type="email" placeholder="Email Address" class="bg-transparent border-none outline-none text-white text-sm w-full placeholder-gray-600"><button type="submit" class="text-gray-400 hover:text-primary transition-colors"><span class="material-icons text-sm">arrow_forward</span></button></form></div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-widest text-gray-600 gap-4">
+                <p>© 2024 Butt Karahi. All Rights Reserved.</p>
+                <div class="flex gap-8"><a href="#" class="hover:text-primary transition-colors">Privacy Policy</a><a href="#" class="hover:text-primary transition-colors">Terms of Service</a></div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Modal (EXACTLY FROM HOME PAGE) -->
+    <div id="bookingModal" class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl hidden items-center justify-center p-4 opacity-0 transition-opacity duration-500">
+        <div class="bg-card-bg max-w-md w-full rounded-2xl p-10 relative border border-white/10 transform scale-95 transition-transform duration-500" id="modalContent">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-white" onclick="toggleModal(false)">
+                <span class="material-icons">close</span>
+            </button>
+            <h2 class="font-display text-3xl text-white mb-2 text-center">Reserve Table</h2>
+            <div class="w-10 h-1 bg-primary mx-auto mb-8"></div>
+            <form class="space-y-4">
+                <input class="w-full bg-[#0a0a0a] text-white border border-white/10 rounded-lg p-3 focus:border-primary outline-none" type="date"/>
+                <input class="w-full bg-[#0a0a0a] text-white border border-white/10 rounded-lg p-3 focus:border-primary outline-none" type="time"/>
+                <select class="w-full bg-[#0a0a0a] text-white border border-white/10 rounded-lg p-3 focus:border-primary outline-none">
+                    <option>2 Guests</option>
+                    <option>4 Guests</option>
+                </select>
+                <button type="button" class="w-full bg-primary text-white py-4 mt-4 rounded-lg font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors">Confirm</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger, Flip);
+
+        // Preloader
+        window.addEventListener("load", () => {
+            const tl = gsap.timeline();
+            tl.to(".loader-line", { width: "100%", duration: 1.5, ease: "power2.inOut" })
+              .to("#preloader", { y: "-100%", duration: 1, ease: "expo.inOut", delay: 0.2 })
+              .from(".hero-text-anim", { y: 50, opacity: 0, duration: 1.5, stagger: 0.2, ease: "power4.out" }, "-=0.5");
+        });
+
+        // 1. FILTER LOGIC with GSAP Flip
+        const filters = document.querySelectorAll('.filter-btn');
+        const items = document.querySelectorAll('.gallery-item');
+        const container = document.querySelector('#gallery-container');
+
+        filters.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update Active State
+                filters.forEach(b => b.classList.remove('active', 'bg-primary', 'border-primary', 'text-white'));
+                filters.forEach(b => b.classList.add('border-white/20', 'text-white/70'));
+                
+                btn.classList.add('active', 'bg-primary', 'border-primary', 'text-white');
+                btn.classList.remove('border-white/20', 'text-white/70');
+
+                const filterValue = btn.getAttribute('data-filter');
+                const state = Flip.getState(items);
+
+                items.forEach(item => {
+                    item.style.display = (filterValue === 'all' || item.getAttribute('data-category') === filterValue) 
+                        ? 'block' 
+                        : 'none';
+                });
+
+                Flip.from(state, {
+                    duration: 0.5,
+                    ease: "power1.inOut",
+                    absolute: true, // Absolute positioning for smooth transitions
+                    onEnter: elements => gsap.fromTo(elements, {opacity: 0, scale: 0.8}, {opacity: 1, scale: 1, duration: 0.5}),
+                    onLeave: elements => gsap.to(elements, {opacity: 0, scale: 0.8, duration: 0.5})
+                });
+            });
+        });
+
+        // 2. VIDEO PLAYER LOGIC
+        function playVideo(videoId, clickedElement) {
+            // Update Main Player
+            const mainPlayer = document.getElementById('main-player');
+            // Adding autoplay=1 so it plays when clicked
+            mainPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+
+            // Update Active State styling
+            const allItems = document.querySelectorAll('.video-item');
+            allItems.forEach(item => item.classList.remove('active-video'));
+            clickedElement.classList.add('active-video');
+        }
+
+        // 3. Cursor Logic
+        const cursorDot = document.querySelector(".cursor-dot");
+        const cursorOutline = document.querySelector(".cursor-outline");
+        window.addEventListener("mousemove", (e) => {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
+        });
+        document.querySelectorAll(".hover-trigger").forEach(trigger => {
+            trigger.addEventListener("mouseenter", () => {
+                cursorOutline.style.width = "60px"; cursorOutline.style.height = "60px";
+                cursorOutline.style.backgroundColor = "rgba(228, 37, 43, 0.1)"; cursorOutline.style.borderColor = "transparent";
+            });
+            trigger.addEventListener("mouseleave", () => {
+                cursorOutline.style.width = "40px"; cursorOutline.style.height = "40px";
+                cursorOutline.style.backgroundColor = "transparent"; cursorOutline.style.borderColor = "rgba(255, 255, 255, 0.5)";
+            });
+        });
+
+        // 4. Reveal Animations
+        gsap.utils.toArray(".reveal-trigger").forEach(section => {
+            gsap.from(section.children, { 
+                y: 30, 
+                opacity: 0, 
+                duration: 1, 
+                stagger: 0.1, 
+                ease: "power3.out", 
+                scrollTrigger: { 
+                    trigger: section, 
+                    start: "top 85%" 
+                } 
+            });
+        });
+
+        // Modal Logic
+        function toggleModal(show) {
+            const modal = document.getElementById('bookingModal');
+            const content = document.getElementById('modalContent');
+            if (show) {
+                modal.classList.remove('hidden', 'flex'); modal.classList.add('flex');
+                setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); content.classList.add('scale-100'); }, 10);
+            } else {
+                modal.classList.add('opacity-0'); content.classList.remove('scale-100'); content.classList.add('scale-95');
+                setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 500);
+            }
+        }
+        document.querySelector('a[href="#book"]').addEventListener('click', (e) => { e.preventDefault(); toggleModal(true); });
+
+        // Navbar bg Logic
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if(window.scrollY > 50) {
+                nav.classList.add('backdrop-blur-md', 'bg-black/80', 'border-white/10'); nav.classList.remove('border-transparent');
+            } else {
+                nav.classList.remove('backdrop-blur-md', 'bg-black/80', 'border-white/10'); nav.classList.add('border-transparent');
+            }
+        });
+    </script>
+</body>
+</html>

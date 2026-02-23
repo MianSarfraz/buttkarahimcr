@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-[#050505]">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Menu | Butt Karahi</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <!-- Noto Nastaliq Urdu Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- GLORIAFOOD SCRIPT -->
+    <script src="https://www.fbgcdn.com/embedder/js/ewm2.js" defer async></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#E4252B", 
+              dark: "#050505",
+              "card-bg": "#121212",
+            },
+            fontFamily: {
+              display: ["Playfair Display", "serif"],
+              sans: ["Manrope", "sans-serif"],
+              urdu: ["Noto Nastaliq Urdu", "serif"],
+            },
+            boxShadow: {
+                'glow': '0 0 30px rgba(228, 37, 43, 0.4)',
+                'glow-sm': '0 0 10px rgba(228, 37, 43, 0.3)',
+            },
+            animation: {
+                'spin-slow': 'spin 20s linear infinite',
+            }
+          },
+        },
+      };
+    </script>
+
+    <style>
+        /* Custom Cursor */
+        body { cursor: none; overflow-x: hidden; }
+        .cursor-dot, .cursor-outline {
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 9999; pointer-events: none;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: #E4252B; }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.5); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+        
+        /* Typography Helpers */
+        .logo-text-mimic {
+            font-family: 'Manrope', sans-serif; font-style: italic; font-weight: 900; color: #E4252B;
+            -webkit-text-stroke: 1px white; text-shadow: 2px 2px 0px rgba(255,255,255,0.1);
+        }
+
+        #preloader { position: fixed; inset: 0; background: #050505; z-index: 10000; display: flex; justify-content: center; align-items: center; }
+        .loader-line { width: 0%; height: 2px; background: #E4252B; }
+        
+        /* Custom Scrollbar - Hidden for cleaner look on mobile tabs */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .glf-button { display: none !important; }
+        
+        /* Menu Tab Styling */
+        .menu-tab { position: relative; padding-bottom: 5px; white-space: nowrap; flex-shrink: 0; }
+        .menu-tab::after {
+            content: ''; position: absolute; left: 0; bottom: 0; width: 0; height: 2px; background: #E4252B; transition: width 0.3s;
+        }
+        .menu-tab.active::after { width: 100%; }
+        .menu-tab:hover::after { width: 100%; }
+    </style>
+</head>
+<body class="bg-dark text-white font-sans antialiased selection:bg-primary selection:text-white">
+
+    <!-- Cursor -->
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-outline hidden md:block"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="relative flex flex-col items-center">
+            <div class="logo-text-mimic text-5xl mb-4 tracking-tighter">Butt Karahi</div>
+            <div class="w-64 h-[1px] bg-white/10 relative overflow-hidden">
+                <div class="loader-line absolute top-0 left-0 h-full w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 text-white py-4 transition-all duration-300 border-b border-transparent bg-dark/80 backdrop-blur-md" id="navbar">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 flex items-center justify-between">
+            <a href="index.html" class="group flex flex-col items-start hover-trigger relative z-50">
+                <div class="flex flex-col items-center drop-shadow-md">
+                    <h1 class="logo-text-mimic text-2xl md:text-4xl leading-none">Butt Karahi</h1>
+                    <span class="text-[8px] md:text-[10px] font-bold uppercase tracking-wide text-white mt-1 shadow-black drop-shadow-md">97 Wilmslow Road - Manchester</span>
+                </div>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-12 text-xs font-bold tracking-[0.2em] uppercase drop-shadow-md">
+                <a href="#menu" class="text-primary transition-colors hover-trigger">Menu</a>
+                <a href="index.html#story" class="hover:text-primary transition-colors hover-trigger">Our Story</a>
+                <a href="index.html#gallery-images" class="hover:text-primary transition-colors hover-trigger">Gallery</a>
+                <a href="index.html#locations" class="hover:text-primary transition-colors hover-trigger">Locations</a>
+                
+                <span class="glf-button-btn border border-white/30 px-6 py-3 rounded-full hover:bg-white hover:text-black transition-all duration-300 hover-trigger shadow-glow-sm hover:shadow-none bg-black/20 backdrop-blur-sm cursor-pointer" 
+                      data-glf-cuid="YOUR_CLIENT_ID_HERE" 
+                      data-glf-ruid="YOUR_RESTAURANT_ID_HERE">
+                    Order Online
+                </span>
+            </div>
+
+            <button class="md:hidden text-white drop-shadow-md">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MENU HERO -->
+    <!-- Fixed: Increased height and padding for mobile to prevent overlap -->
+    <header class="relative min-h-[60vh] md:h-[70vh] w-full flex items-center justify-center overflow-hidden bg-[#050505] border-b border-white/5 pt-24 pb-12 md:pt-0 md:pb-0">
+        <div class="absolute inset-0 z-0">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVGz3q8K-yO9-yCL6TisyB0XoLxaX-CXTRhp-Q60HqhKL8bim6eZ7gNDK5wtz6OFdrFKjI6FoyVr4kNz5FnDyUUkaLGqYnl5aLCds9c7nZl81hr0jHRTwwZ4y-m6aFEs3Yg22T8Zoux3Zn94toBMQwhpl-83HtBqxpPTqHOSnZNqE14OlRA2oG6_EQi8OhlDWcktIqzYEGzqLVS7JUG-VmhmNBiMHPsB8EwmPrQlGwqPAebS0aVGuj-SSeVouMh4VatUsnbmdi4RE" 
+                 class="w-full h-full object-cover opacity-30 parallax-bg filter grayscale" alt="Menu Hero">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-6">
+            <span class="text-primary text-[10px] md:text-xs font-bold tracking-[0.3em] md:tracking-[0.5em] uppercase mb-4 md:mb-6 block animate-pulse">Authentic Taste</span>
+            <!-- Fixed: Smaller font size on mobile (text-5xl) to prevent wrapping overlap -->
+            <h1 class="font-display text-5xl md:text-9xl text-white leading-tight md:leading-none mb-8 hero-text-anim">
+                The <br/><span class="text-primary italic">Menu.</span>
+            </h1>
+            
+            <button class="glf-button-btn mt-4 md:mt-8 px-8 md:px-12 py-4 md:py-5 bg-primary text-white font-bold uppercase tracking-[0.2em] text-xs md:text-sm hover:bg-white hover:text-black transition-all duration-300 shadow-glow rounded-full cursor-pointer"
+                    data-glf-cuid="YOUR_CLIENT_ID_HERE" 
+                    data-glf-ruid="YOUR_RESTAURANT_ID_HERE">
+                Start Online Order
+            </button>
+        </div>
+    </header>
+
+    <!-- MENU CONTENT -->
+    <section class="py-12 md:py-20 bg-dark min-h-screen">
+        <div class="max-w-[1200px] mx-auto px-6 md:px-12">
+            
+            <!-- Category Tabs (FIXED FOR MOBILE SCROLLING) -->
+            <!-- Added: overflow-x-auto, whitespace-nowrap, flex-nowrap to enable swiping -->
+            <!-- Adjusted: top-[70px] to sit correctly under navbar on scroll -->
+            <div class="flex flex-nowrap overflow-x-auto no-scrollbar justify-start md:justify-center gap-6 md:gap-8 mb-12 border-b border-white/10 pb-4 sticky top-[70px] bg-dark/95 backdrop-blur-md z-30 pt-4 px-2 -mx-6 md:mx-0 pl-6 md:pl-0">
+                <button class="menu-tab active text-primary text-sm md:text-lg font-bold uppercase tracking-widest transition-colors" onclick="filterMenu('karahi', this)">Karahi</button>
+                <button class="menu-tab text-gray-500 hover:text-white text-sm md:text-lg font-bold uppercase tracking-widest transition-colors" onclick="filterMenu('bbq', this)">BBQ & Platters</button>
+                <button class="menu-tab text-gray-500 hover:text-white text-sm md:text-lg font-bold uppercase tracking-widest transition-colors" onclick="filterMenu('rice', this)">Rice & Veg</button>
+                <button class="menu-tab text-gray-500 hover:text-white text-sm md:text-lg font-bold uppercase tracking-widest transition-colors" onclick="filterMenu('special', this)">Takatuk & Kabab</button>
+                <button class="menu-tab text-gray-500 hover:text-white text-sm md:text-lg font-bold uppercase tracking-widest transition-colors" onclick="filterMenu('naan', this)">Naan & Sides</button>
+                <button class="menu-tab text-gray-500 hover:text-white text-sm md:text-lg font-bold uppercase tracking-widest transition-colors" onclick="filterMenu('drinks', this)">Beverages</button>
+            </div>
+
+            <!-- Menu Grid -->
+            <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12 md:gap-y-16">
+                
+                <!-- === CATEGORY: KARAHI === -->
+                <div class="menu-item karahi flex gap-4 md:gap-6 group reveal-trigger">
+                    <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-lg overflow-hidden border border-white/10">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjvg5ilTFw-qoDD5Zh00VwGokKgJn6xboZ8p1x9-b9Mn54Ok6flI-0LMOAoVx7rr-aa4X_YCLfEngma0R6T8qO13Q5wZUDpD3mfRsULFZ8lxFT2sEN6BtBQ7bRduV8wENBeipAFsCcvPe94ChSRXloW8K-CiB_rEhnLEgEyf9P-bZJxCgIVz9ch0W68w0zURhXOeLEHA_6CTC-Q-WL2OaM8SYdvcA_Jyz3-e4V1j7w00XewXUWs8pVhp88QmnwoeoNoA-nIOj76Ik" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 border-b border-white/10 pb-6">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h3 class="text-lg md:text-xl font-display text-white">Desi Chicken Karahi</h3>
+                            <span class="text-primary font-bold text-sm md:text-base">£39.99</span>
+                        </div>
+                        <p class="text-gray-500 text-[10px] md:text-xs uppercase tracking-wide mb-1">(Butt Special - Organic Chicken)</p>
+                        <p class="text-gray-500 text-xs md:text-sm leading-relaxed mb-4">Our signature organic chicken cooked in pure desi ghee.</p>
+                    </div>
+                </div>
+
+                <div class="menu-item karahi flex gap-4 md:gap-6 group reveal-trigger">
+                    <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-lg overflow-hidden border border-white/10">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjvg5ilTFw-qoDD5Zh00VwGokKgJn6xboZ8p1x9-b9Mn54Ok6flI-0LMOAoVx7rr-aa4X_YCLfEngma0R6T8qO13Q5wZUDpD3mfRsULFZ8lxFT2sEN6BtBQ7bRduV8wENBeipAFsCcvPe94ChSRXloW8K-CiB_rEhnLEgEyf9P-bZJxCgIVz9ch0W68w0zURhXOeLEHA_6CTC-Q-WL2OaM8SYdvcA_Jyz3-e4V1j7w00XewXUWs8pVhp88QmnwoeoNoA-nIOj76Ik" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 border-b border-white/10 pb-6">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h3 class="text-lg md:text-xl font-display text-white">Desi Chicken Karahi (Butter)</h3>
+                            <span class="text-primary font-bold text-sm md:text-base">£41.99</span>
+                        </div>
+                        <p class="text-gray-500 text-xs md:text-sm leading-relaxed mb-4">Rich organic chicken prepared with premium butter.</p>
+                    </div>
+                </div>
+
+                <div class="menu-item karahi flex gap-4 md:gap-6 group reveal-trigger">
+                    <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-lg overflow-hidden border border-white/10">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-8S-Cm8NBkg3mizYHSV7pC_y_vwbX7LQapf1gS1ARr3f9SV56jq1R5eioWZBKWSdm7o8LcJoskHCAVXjshHjtmxZ5WNxBK6rc9TnhWih88Mmo7vDSXC4j5kxuZetXnWUhBTkmXEH8jokh80zkeNGkOXvbESAS3xLRBMc0NitvflB8CVPK69mvZmZzP8kPPEXVWefx8XMLFJO3XTWO5CkSbDJM4nQWgf6CSujPR-taaKkdbSxeLqjUk2jcyLK-u2lP55w8Pjcg_FQ" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 border-b border-white/10 pb-6">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h3 class="text-lg md:text-xl font-display text-white">Lamb Karahi (Butt Special)</h3>
+                            <span class="text-primary font-bold text-sm md:text-base">£39.99</span>
+                        </div>
+                        <p class="text-gray-500 text-xs md:text-sm leading-relaxed mb-4">Premium lamb cuts cooked to perfection in our secret spices.</p>
+                    </div>
+                </div>
+
+                <div class="menu-item karahi flex gap-4 md:gap-6 group reveal-trigger">
+                    <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-lg overflow-hidden border border-white/10">
+                        <img src="https://i.ibb.co/sv5s0Xhq/Gemini-Generated-Image-p17rs7p17rs7p17r.png" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 border-b border-white/10 pb-6">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h3 class="text-lg md:text-xl font-display text-white">Charsi Chicken Karahi</h3>
+                            <span class="text-primary font-bold text-sm md:text-base">£29.99</span>
+                        </div>
+                        <p class="text-gray-500 text-xs md:text-sm leading-relaxed mb-4">Peshawari style with minimal spices, salt, and black pepper.</p>
+                    </div>
+                </div>
+
+                <!-- === CATEGORY: BBQ & PLATTERS === -->
+                <div class="menu-item bbq flex gap-4 md:gap-6 group reveal-trigger hidden">
+                    <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-lg overflow-hidden border border-white/10">
+                        <img src="https://i.ibb.co/zhCf9Mfw/Gemini-Generated-Image-xbe523xbe523xbe5.png" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 border-b border-white/10 pb-6">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h3 class="text-lg md:text-xl font-display text-white">Butt Special BBQ Platter</h3>
+                            <span class="text-primary font-bold text-sm md:text-base">£41.99</span>
+                        </div>
+                        <p class="text-gray-500 text-[10px] md:text-xs uppercase tracking-wide mb-1">(Serves 2-4)</p>
+                        <p class="text-gray-500 text-xs md:text-sm leading-relaxed mb-4">1 Seekh Charsi Tikka, 3 PCs Chops, 2 PCs Chicken Leg, 2 PCs Small Chapli Kabab, 1 Seekh Kebab.</p>
+                    </div>
+                </div>
+
+                <div class="menu-item bbq flex gap-4 md:gap-6 group reveal-trigger hidden">
+                    <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-lg overflow-hidden border border-white/10">
+                        <img src="https://i.ibb.co/zhCf9Mfw/Gemini-Generated-Image-xbe523xbe523xbe5.png" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 border-b border-white/10 pb-6">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h3 class="text-lg md:text-xl font-display text-white">Grand BBQ Platter</h3>
+                            <span class="text-primary font-bold text-sm md:text-base">£69.99</span>
+                        </div>
+                        <p class="text-gray-500 text-[10px] md:text-xs uppercase tracking-wide mb-1">(Serves 4-6)</p>
+                        <p class="text-gray-500 text-xs md:text-sm leading-relaxed mb-4">2 Seekh Charsi Tikka, 6 PCs Chops, 4 PCs Chicken Leg, 3 PCs Chapli Kabab, 2 PCs Seekh Kebab.</p>
+                    </div>
+                </div>
+
+                <div class="menu-item bbq flex gap-4 md:gap-6 group reveal-trigger hidden">
+                    <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-lg overflow-hidden border border-white/10">
+                        <img src="https://i.ibb.co/wFnhhsyg/Gemini-Generated-Image-9hzimg9hzimg9hzi.png" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 border-b border-white/10 pb-6">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h3 class="text-lg md:text-xl font-display text-white">Charsi Tikka (Lamb/Chicken)</h3>
+                            <span class="text-primary font-bold text-sm md:text-base">£33.99</span>
+                        </div>
+                        <p class="text-gray-500 text-xs md:text-sm leading-relaxed mb-4">Succulent meat marinated in chars spices and grilled.</p>
+                    </div>
+                </div>
+
+                <!-- === CATEGORY: RICE & VEG === -->
+                <div class="menu-item rice flex gap-4 md:gap-6 group reveal-trigger hidden">
+                    <div class="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-lg overflow-hidden border border-white/10">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAq81QUQMMs7tHevOLWjUrzqRkKJ7HtmgldL8VnrNCVl7O_a22uDBDvEAnY-xMw0K577oHPWFaCNNAPM7QnNDwUjjW1xU7hc3CUwRa7L0hQrZ5OWvvaJegP5jAGVEHvDYZQcbsAC1UyEFt5mhfjJxP0yx-tfRwaGQkmPM1GUzL3MK4HvxOfze__DFA4sZYklC6XGJRlbW7KH7tPgbfxeL9pq3_iDustX58ve6c9Y7VmSr0Eqzp1eA-VwnPnrHEAlhovJD49zeEqwOg" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 border-b border-white/10 pb-6">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h3 class="text-lg md:text-xl font-display text-white">Kabuli Pulao</h3>
+                            <span class="text-primary font-bold text-sm md:text-base">£11.99</span>
+                        </div>
+                        <p class="text-gray-500 text-xs md:text-sm leading-relaxed mb-4">Traditional Afghan rice with carrots and raisins.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER (HOMEPAGE FOOTER) -->
+    <footer class="bg-[#020202] pt-24 pb-12 border-t border-white/5 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+                <div class="space-y-8">
+                    <div>
+                        <div class="logo-text-mimic text-3xl mb-2">Butt Karahi</div>
+                        <p class="text-gray-500 text-sm leading-relaxed mt-4">The gold standard of Pakistani cuisine. Experience the authentic flavor of the wok, mastered over generations.</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all duration-300 group"><span class="material-icons text-sm">facebook</span></a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all duration-300 group"><span class="material-icons text-sm">camera_alt</span></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-display text-lg italic mb-8 flex items-center gap-2"><span class="w-8 h-[1px] bg-primary"></span> Quick Links</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Home</a></li>
+                        <li><a href="#menu" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> The Menu</a></li>
+                        <li><a href="#locations" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Locations</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-display text-lg italic mb-8 flex items-center gap-2"><span class="w-8 h-[1px] bg-primary"></span> Services</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Private Dining</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-widest flex items-center gap-2 group"><span class="w-0 group-hover:w-2 h-[1px] bg-primary transition-all duration-300"></span> Catering</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-display text-lg italic mb-8 flex items-center gap-2"><span class="w-8 h-[1px] bg-primary"></span> Contact</h4>
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4"><span class="material-icons text-primary text-sm mt-1">place</span><div><p class="text-white text-sm font-bold uppercase tracking-wide">Manchester</p><p class="text-gray-500 text-xs mt-1">97 Wilmslow Road, M14 5AN</p></div></div>
+                        <div class="flex items-start gap-4"><span class="material-icons text-primary text-sm mt-1">call</span><div><p class="text-white text-sm font-bold uppercase tracking-wide">Reservations</p><p class="text-gray-500 text-xs mt-1">+44 161 123 4567</p></div></div>
+                        <div class="pt-6"><p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Subscribe for Offers</p><form class="flex border-b border-white/20 pb-2 focus-within:border-primary transition-colors"><input type="email" placeholder="Email Address" class="bg-transparent border-none outline-none text-white text-sm w-full placeholder-gray-600"><button type="submit" class="text-gray-400 hover:text-primary transition-colors"><span class="material-icons text-sm">arrow_forward</span></button></form></div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-widest text-gray-600 gap-4">
+                <p>© 2024 Butt Karahi. All Rights Reserved.</p>
+                <div class="flex gap-8"><a href="#" class="hover:text-primary transition-colors">Privacy Policy</a><a href="#" class="hover:text-primary transition-colors">Terms of Service</a></div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        window.addEventListener("load", () => {
+            const tl = gsap.timeline();
+            tl.to(".loader-line", { width: "100%", duration: 1.5, ease: "power2.inOut" })
+              .to("#preloader", { y: "-100%", duration: 1, ease: "expo.inOut", delay: 0.2 })
+              .from(".hero-text-anim", { y: 50, opacity: 0, duration: 1.5, stagger: 0.2, ease: "power4.out" }, "-=0.5");
+        });
+
+        gsap.to(".parallax-bg", {
+            yPercent: 30,
+            ease: "none",
+            scrollTrigger: {
+                trigger: "header",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
+        function filterMenu(category, clickedBtn) {
+            const buttons = document.querySelectorAll('.menu-tab');
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'text-primary');
+                btn.classList.add('text-gray-500');
+            });
+            clickedBtn.classList.add('active', 'text-primary');
+            clickedBtn.classList.remove('text-gray-500');
+
+            const allItems = document.querySelectorAll('.menu-item');
+            
+            gsap.to(allItems, {
+                opacity: 0,
+                y: 20,
+                duration: 0.3,
+                onComplete: () => {
+                    allItems.forEach(item => {
+                        if (item.classList.contains(category)) {
+                            item.classList.remove('hidden');
+                            item.classList.add('flex');
+                        } else {
+                            item.classList.add('hidden');
+                            item.classList.remove('flex');
+                        }
+                    });
+                    
+                    const visibleItems = document.querySelectorAll(`.menu-item.${category}`);
+                    gsap.fromTo(visibleItems, 
+                        { opacity: 0, y: 20 },
+                        { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, clearProps: "all" }
+                    );
+                }
+            });
+        }
+
+        const cursorDot = document.querySelector(".cursor-dot");
+        const cursorOutline = document.querySelector(".cursor-outline");
+        window.addEventListener("mousemove", (e) => {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
+        });
+        document.querySelectorAll(".hover-trigger, .menu-tab, .glf-button-btn").forEach(trigger => {
+            trigger.addEventListener("mouseenter", () => {
+                cursorOutline.style.width = "60px"; cursorOutline.style.height = "60px";
+                cursorOutline.style.backgroundColor = "rgba(228, 37, 43, 0.1)"; cursorOutline.style.borderColor = "transparent";
+            });
+            trigger.addEventListener("mouseleave", () => {
+                cursorOutline.style.width = "40px"; cursorOutline.style.height = "40px";
+                cursorOutline.style.backgroundColor = "transparent"; cursorOutline.style.borderColor = "rgba(255, 255, 255, 0.5)";
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if(window.scrollY > 50) {
+                nav.classList.add('backdrop-blur-md', 'bg-black/80', 'border-white/10'); nav.classList.remove('border-transparent');
+            } else {
+                nav.classList.remove('backdrop-blur-md', 'bg-black/80', 'border-white/10'); nav.classList.add('border-transparent');
+            }
+        });
+    </script>
+</body>
+</html>

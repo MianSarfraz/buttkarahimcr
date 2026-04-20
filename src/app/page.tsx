@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect } from "react";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import OrderForm from "@/components/OrderForm";
 import BookingForm from "@/components/BookingForm";
 import { useCart } from "@/context/CartContext";
 import { Plus, ShoppingBag } from "lucide-react";
@@ -140,14 +140,14 @@ export default function Home() {
                         </h1>
 
                         <div className="pt-4">
-                            <a
-                                href="#order"
+                            <Link
+                                href="/menu"
                                 className="group relative inline-flex items-center justify-center px-8 py-3 md:px-12 md:py-4 overflow-hidden rounded-full bg-primary text-white transition-all duration-300 hover:scale-105 hover:shadow-glow shadow-xl shadow-black/50 border border-white/20"
                             >
                                 <span className="relative text-xs md:text-sm font-bold tracking-[0.2em] uppercase z-10">
                                     Order Now
                                 </span>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -360,13 +360,13 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="mt-20 text-center">
-                        <a
+                        <Link
                             href="/menu"
                             className="inline-flex items-center gap-4 px-12 py-5 border border-white/10 text-white font-bold uppercase tracking-widest text-[10px] rounded-full hover:bg-white hover:text-black transition-all duration-500 group"
                         >
                             Explore Full Menu
                             <span className="w-8 h-px bg-primary group-hover:w-12 transition-all duration-500"></span>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </section>

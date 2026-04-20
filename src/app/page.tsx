@@ -6,9 +6,61 @@ import Footer from "@/components/Footer";
 import OrderForm from "@/components/OrderForm";
 import BookingForm from "@/components/BookingForm";
 import { useCart } from "@/context/CartContext";
-import { Plus } from "lucide-react";
+import { Plus, ShoppingBag } from "lucide-react";
+import { useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+const FeaturedItemContent = ({ name, desc, image, variants }: { name: string, desc: string, image: string, variants: { size: string, price: string }[] }) => {
+    const [selectedVariant, setSelectedVariant] = useState(variants[0]);
+    const { addToCart } = useCart();
+
+    return (
+        <>
+            <div className="flex justify-between items-start mb-2">
+                <h3 className="font-display text-2xl text-white italic transition-colors duration-300 group-hover:text-primary">
+                    {name}
+                </h3>
+                <span className="text-primary font-bold">{selectedVariant.price}</span>
+            </div>
+            <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-2">
+                {desc}
+            </p>
+
+            <div className="flex flex-col gap-4">
+                {/* Size Selector */}
+                {variants.length > 1 && (
+                    <div className="flex items-center gap-2 bg-white/5 rounded-lg p-1 border border-white/10 self-start">
+                        {variants.map((v) => (
+                            <button
+                                key={v.size}
+                                onClick={() => setSelectedVariant(v)}
+                                className={`px-3 py-1.5 rounded-md text-[9px] font-bold uppercase tracking-widest transition-all duration-300 ${selectedVariant.size === v.size
+                                    ? "bg-primary text-white shadow-lg"
+                                    : "text-gray-500 hover:text-white"
+                                    }`}
+                            >
+                                {v.size}
+                            </button>
+                        ))}
+                    </div>
+                )}
+
+                <button
+                    onClick={() => addToCart({
+                        id: `${name}-${selectedVariant.size}`,
+                        name: `${name} (${selectedVariant.size})`,
+                        price: selectedVariant.price,
+                        image: image
+                    })}
+                    className="w-full flex items-center justify-center gap-2 py-4 bg-white/5 border border-white/10 rounded-full text-white text-[10px] font-bold uppercase tracking-widest hover:bg-primary hover:border-primary transition-all duration-300 shadow-lg"
+                >
+                    <ShoppingBag className="w-3 h-3" /> Add to Order
+                </button>
+            </div>
+        </>
+    );
+};
 
 export default function Home() {
     const { addToCart } = useCart();
@@ -134,9 +186,9 @@ export default function Home() {
             </section>
 
             {/* Experience Section (Rotating Plates) */}
-            <section className="relative pt-0 pb-32 bg-dark overflow-hidden">
-                <div className="relative w-full py-52 md:py-64 min-h-[80vh] flex items-center justify-center overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-[#080808] to-[#050505]"></div>
+            <section className="relative pt-0 pb-32 bg-dark">
+                <div className="relative w-full py-52 md:py-64 min-h-[100vh] lg:min-h-[1100px] flex items-center justify-center overflow-visible">
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-[#080808] to-[#050505] overflow-hidden"></div>
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-primary/5 blur-[120px] rounded-full z-0"></div>
 
                     <div className="relative z-20 text-center mix-blend-screen pointer-events-none mb-4 md:mb-0">
@@ -184,27 +236,27 @@ export default function Home() {
 
                 <div className="max-w-[1400px] mx-auto px-4 md:px-12 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 auto-rows-[180px] md:auto-rows-[300px]">
                     <div className="col-span-2 relative group overflow-hidden rounded-xl border border-white/5">
-                        <img src="https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                        <img src="/gallary4.jpg"
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Restaurant Interior" />
                     </div>
                     <div className="relative group overflow-hidden rounded-xl border border-white/5">
-                        <img src="https://images.pexels.com/photos/9609844/pexels-photo-9609844.jpeg?auto=compress&cs=tinysrgb&w=800"
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Karahi" />
+                        <img src="/gallary5.jpg"
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Crowd Vibe" />
                     </div>
                     <div className="relative group overflow-hidden rounded-xl border border-white/5">
-                        <img src="https://images.pexels.com/photos/2696064/pexels-photo-2696064.jpeg?auto=compress&cs=tinysrgb&w=800"
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Street Food" />
+                        <img src="/Gallery1.jpg"
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Street View" />
                     </div>
                     <div className="relative group overflow-hidden rounded-xl border border-white/5">
-                        <img src="https://images.pexels.com/photos/4958792/pexels-photo-4958792.jpeg?auto=compress&cs=tinysrgb&w=800"
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Spiced Dish" />
+                        <img src="/gallary6.jpg"
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Food Prep" />
                     </div>
                     <div className="relative group overflow-hidden rounded-xl border border-white/5">
-                        <img src="https://images.pexels.com/photos/2474661/pexels-photo-2474661.jpeg?auto=compress&cs=tinysrgb&w=800"
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Grilled Meat" />
+                        <img src="/gallary8.jpg"
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Dining Experience" />
                     </div>
                     <div className="col-span-2 relative group overflow-hidden rounded-xl border border-white/5">
-                        <img src="https://images.pexels.com/photos/1579739/pexels-photo-1579739.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                        <img src="/gallery2.jpg"
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Dining Ambience" />
                     </div>
                 </div>
@@ -230,93 +282,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* ── Ramadan / Iftar Offer Section ── */}
-            <section className="relative py-24 md:py-40 bg-[#050505] overflow-hidden border-y border-white/5">
-                {/* Visual Background Elements */}
-                <div className="absolute top-0 right-[-10%] w-[600px] h-[600px] bg-primary/10 blur-[150px] rounded-full -z-0" />
-                <div className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-primary/5 blur-[120px] rounded-full -z-0" />
-
-                <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-20 lg:gap-32 items-center">
-
-                        {/* Content Side */}
-                        <div className="flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1">
-                            <span className="inline-block text-primary font-bold tracking-[0.6em] uppercase text-[10px] md:text-xs mb-8 py-2.5 px-6 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-md">
-                                🌙 Ramadan Mubarak 2026
-                            </span>
-
-                            <div className="relative mb-6">
-                                <span className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-primary tracking-tighter leading-[0.9] drop-shadow-[0_0_30px_rgba(228,37,43,0.3)]">
-                                    FLAT 10% OFF
-                                </span>
-                            </div>
-
-                            <h2 className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-white leading-[0.8] mb-10 uppercase tracking-tighter">
-                                ON IFTAR<br />
-                                <span className="text-white/30 italic font-light tracking-normal lowercase">orders.</span>
-                            </h2>
-
-                            <p className="text-gray-400 text-base md:text-xl font-light max-w-lg mb-12 leading-relaxed tracking-wide">
-                                Join us this holy month for an authentic Iftar experience.
-                                Savor the legacy of Lahore with our signature recipes and a special Ramadan blessing.
-                            </p>
-
-                            <div className="flex flex-col sm:flex-row items-center gap-6 w-full lg:w-auto">
-                                <a
-                                    href="/menu"
-                                    className="w-full sm:w-auto px-12 py-5 bg-white text-black font-bold uppercase tracking-[0.2em] text-[11px] rounded-full hover:bg-primary hover:text-white transition-all duration-500 shadow-2xl active:scale-95"
-                                >
-                                    🍽️ Order Now
-                                </a>
-                                <a
-                                    href="tel:+447438812740"
-                                    className="w-full sm:w-auto px-12 py-5 border border-white/20 text-white font-bold uppercase tracking-[0.2em] text-[11px] rounded-full hover:bg-white hover:text-black transition-all duration-500 backdrop-blur-md active:scale-95"
-                                >
-                                    📞 +44 7438 812740
-                                </a>
-                            </div>
-
-                            <div className="mt-16 flex items-center gap-6 group">
-                                <div className="flex flex-col">
-                                    <span className="text-primary font-bold text-xs tracking-widest uppercase mb-1">Authentic Taste</span>
-                                    <span className="text-gray-600 text-[10px] uppercase tracking-[0.2em] font-medium">Lakshmi Chowk, Lahore</span>
-                                </div>
-                                <div className="w-10 h-px bg-white/10 group-hover:w-16 transition-all duration-500" />
-                                <div className="flex flex-col">
-                                    <span className="text-primary font-bold text-xs tracking-widest uppercase mb-1">Pre-Booking</span>
-                                    <span className="text-gray-600 text-[10px] uppercase tracking-[0.2em] font-medium">Open 24/7</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Image Side */}
-                        <div className="relative group order-1 lg:order-2">
-                            <div className="relative z-10 w-full aspect-[4/5] md:aspect-square lg:aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.5)] bg-[#111]">
-                                <img
-                                    src="/10%25%20off%20iftar%20o.jpg"
-                                    alt="Iftar Special Offer"
-                                    className="w-full h-full object-cover transform transition-transform duration-1000 group-hover:scale-110"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
-
-                                {/* Label overlay */}
-                                <div className="absolute bottom-10 left-10">
-                                    <span className="text-white text-xs font-bold tracking-[0.4em] uppercase opacity-60">Ramadan 2026</span>
-                                </div>
-                            </div>
-
-                            {/* Decorative Elements */}
-                            <div className="absolute -inset-6 border border-primary/20 rounded-[2.5rem] -z-10 group-hover:border-primary/40 transition-all duration-700 -rotate-2 group-hover:rotate-0" />
-                            <div className="absolute -inset-6 border border-white/5 rounded-[2.5rem] -z-20 group-hover:scale-95 transition-all duration-700 rotate-2 group-hover:rotate-0" />
-
-                            {/* Accent Lights */}
-                            <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/20 blur-[60px] rounded-full -z-10 animate-pulse" />
-                            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/10 blur-[60px] rounded-full -z-10" />
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             {/* Menu Section */}
             <section id="menu" className="py-32 bg-[#080808]">
                 <div className="max-w-[1400px] mx-auto px-6 md:px-12">
@@ -328,81 +293,70 @@ export default function Home() {
                             Signatures
                         </h2>
                     </div>
-                    <div className="grid md:grid-cols-3 gap-8">
-                        {/* Card 1 */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {/* Card 1: Desi Chicken Karahi */}
                         <div className="group relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 border border-white/5 hover:border-primary/30">
                             <div className="w-full h-48 md:h-64 overflow-hidden rounded-xl mb-6 relative">
                                 <img
-                                    src="https://images.pexels.com/photos/9609844/pexels-photo-9609844.jpeg?auto=compress&cs=tinysrgb&w=800"
-                                    alt="Chicken Karahi"
+                                    src="/Desi Chicken Karahi-100.jpg.jpeg"
+                                    alt="Desi Chicken Karahi"
                                     className="w-full h-full object-cover img-zoom transform scale-100 group-hover:scale-110 transition-transform duration-700"
                                 />
                             </div>
-                            <div className="flex justify-between items-start mb-2">
-                                <h3 className="font-display text-2xl text-white italic">
-                                    Chicken Karahi
-                                </h3>
-                                <span className="text-primary font-bold">£16.50</span>
-                            </div>
-                            <p className="text-gray-500 text-sm leading-relaxed mb-6">
-                                Cooked in fresh tomatoes, ginger & green chillies.
-                            </p>
-                            <button
-                                onClick={() => addToCart({ id: 'chicken-karahi', name: 'Chicken Karahi', price: '£16.50', image: 'https://images.pexels.com/photos/9609844/pexels-photo-9609844.jpeg?auto=compress&cs=tinysrgb&w=400' })}
-                                className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 border border-white/10 rounded-full text-white text-[10px] font-bold uppercase tracking-widest hover:bg-primary hover:border-primary transition-all duration-300"
-                            >
-                                <Plus className="w-3 h-3" /> Add to Cart
-                            </button>
+                            <FeaturedItemContent
+                                name="Desi Chicken Karahi"
+                                desc="Butt Special Organic Chicken cooked in traditional spices."
+                                image="/Desi Chicken Karahi-100.jpg.jpeg"
+                                variants={[{ size: "½ Kg", price: "£19.99" }, { size: "1 Kg", price: "£39.99" }]}
+                            />
                         </div>
-                        {/* Card 2 */}
-                        <div className="group relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 border border-white/5 hover:border-primary/30 mt-0 md:mt-12">
-                            <div className="w-full h-48 md:h-64 overflow-hidden rounded-xl mb-6 relative">
-                                <img
-                                    src="https://images.pexels.com/photos/2474661/pexels-photo-2474661.jpeg?auto=compress&cs=tinysrgb&w=800"
-                                    alt="Mutton Karahi"
-                                    className="w-full h-full object-cover img-zoom transform scale-100 group-hover:scale-110 transition-transform duration-700"
-                                />
-                            </div>
-                            <div className="flex justify-between items-start mb-2">
-                                <h3 className="font-display text-2xl text-white italic">
-                                    Mutton Karahi
-                                </h3>
-                                <span className="text-primary font-bold">£18.90</span>
-                            </div>
-                            <p className="text-gray-500 text-sm leading-relaxed mb-6">
-                                Tender mutton slow-cooked in our secret spices.
-                            </p>
-                            <button
-                                onClick={() => addToCart({ id: 'mutton-karahi', name: 'Mutton Karahi', price: '£18.90', image: 'https://images.pexels.com/photos/2474661/pexels-photo-2474661.jpeg?auto=compress&cs=tinysrgb&w=400' })}
-                                className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 border border-white/10 rounded-full text-white text-[10px] font-bold uppercase tracking-widest hover:bg-primary hover:border-primary transition-all duration-300"
-                            >
-                                <Plus className="w-3 h-3" /> Add to Cart
-                            </button>
-                        </div>
-                        {/* Card 3 */}
+                        {/* Card 2: Lamb Karahi */}
                         <div className="group relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 border border-white/5 hover:border-primary/30">
                             <div className="w-full h-48 md:h-64 overflow-hidden rounded-xl mb-6 relative">
                                 <img
-                                    src="https://images.pexels.com/photos/6210747/pexels-photo-6210747.jpeg?auto=compress&cs=tinysrgb&w=800"
-                                    alt="Royal Grill"
+                                    src="/Lamb Karahi Butt Special -100.jpg.jpeg"
+                                    alt="Lamb Karahi"
                                     className="w-full h-full object-cover img-zoom transform scale-100 group-hover:scale-110 transition-transform duration-700"
                                 />
                             </div>
-                            <div className="flex justify-between items-start mb-2">
-                                <h3 className="font-display text-2xl text-white italic">
-                                    Royal Grill
-                                </h3>
-                                <span className="text-primary font-bold">£24.00</span>
+                            <FeaturedItemContent
+                                name="Lamb Karahi"
+                                desc="Slow-cooked tender lamb in rich aromatic spices."
+                                image="/Lamb Karahi Butt Special -100.jpg.jpeg"
+                                variants={[{ size: "½ Kg", price: "£21.99" }, { size: "1 Kg", price: "£41.99" }]}
+                            />
+                        </div>
+                        {/* Card 3: Mix Grill */}
+                        <div className="group relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 border border-white/5 hover:border-primary/30">
+                            <div className="w-full h-48 md:h-64 overflow-hidden rounded-xl mb-6 relative">
+                                <img
+                                    src="/Mix Grill Platter-100.jpg.jpeg"
+                                    alt="Mix Grill"
+                                    className="w-full h-full object-cover img-zoom transform scale-100 group-hover:scale-110 transition-transform duration-700"
+                                />
                             </div>
-                            <p className="text-gray-500 text-sm leading-relaxed mb-6">
-                                Lamb Chops, Seekh Kebabs & Malai Tikka.
-                            </p>
-                            <button
-                                onClick={() => addToCart({ id: 'royal-grill', name: 'Royal Grill', price: '£24.00', image: 'https://images.pexels.com/photos/6210747/pexels-photo-6210747.jpeg?auto=compress&cs=tinysrgb&w=400' })}
-                                className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 border border-white/10 rounded-full text-white text-[10px] font-bold uppercase tracking-widest hover:bg-primary hover:border-primary transition-all duration-300"
-                            >
-                                <Plus className="w-3 h-3" /> Add to Cart
-                            </button>
+                            <FeaturedItemContent
+                                name="Mix Grill"
+                                desc="Assorted grilled meats served with salad & Afghan naan."
+                                image="/Mix Grill Platter-100.jpg.jpeg"
+                                variants={[{ size: "Large", price: "£29.99" }]}
+                            />
+                        </div>
+                        {/* Card 4: Chapli Kabab Special */}
+                        <div className="group relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 border border-white/5 hover:border-primary/30">
+                            <div className="w-full h-48 md:h-64 overflow-hidden rounded-xl mb-6 relative">
+                                <img
+                                    src="/Chapli kabab-100.jpg.jpeg"
+                                    alt="Chapli Kabab Special"
+                                    className="w-full h-full object-cover img-zoom transform scale-100 group-hover:scale-110 transition-transform duration-700"
+                                />
+                            </div>
+                            <FeaturedItemContent
+                                name="Chapli Kabab Special"
+                                desc="3 Chapli Kababs + 2 Naan. Served with fresh salad & sauce."
+                                image="/Chapli kabab-100.jpg.jpeg"
+                                variants={[{ size: "Large", price: "£21.99" }]}
+                            />
                         </div>
                     </div>
                     <div className="mt-20 text-center">
@@ -420,7 +374,7 @@ export default function Home() {
             {/* CTA: Taste the Legacy */}
             <section className="relative py-40 flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
-                    <img src="https://images.pexels.com/photos/2696064/pexels-photo-2696064.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                    <img src="https://instagram.flyp2-1.fna.fbcdn.net/v/t51.82787-15/603041618_17844074406656141_3772029273287348375_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=Mzc5MjQxNjc5Njg2Nzk2MDY2MQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjEwODB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=Nk842tWqlogQ7kNvwGTddlh&_nc_oc=AdnihPozlRV6Njb2Y5PQvx76jgUFJL2Jwsl-IUvWyKmmM0rD44-1_ld4oLHrBE17t1n56nkC_iHjZC5qGd2_DVN8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.flyp2-1.fna&_nc_gid=ki6G3Snq77n6zDBHLmnS6w&_nc_ss=8&oh=00_AfyKWEK0XY-d7XCkVOHMlBvUHZ8qeCjXt6v7pWFOWf9TXg&oe=69B4A4A6"
                         className="w-full h-full object-cover grayscale brightness-[0.4]" alt="Spices" />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#020202] via-[#020202]/80 to-transparent"></div>
                 </div>
@@ -478,46 +432,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Order Form Section */}
-            <section id="order" className="py-32 bg-[#050505]">
-                <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-                    <div className="grid lg:grid-cols-2 gap-20 items-center">
-                        <div>
-                            <span className="text-primary font-bold tracking-[0.3em] uppercase text-xs">
-                                Reservations
-                            </span>
-                            <h2 className="font-display text-5xl md:text-7xl text-white mt-4 mb-8">
-                                Ready to <br /> <span className="text-primary italic">Taste?</span>
-                            </h2>
-                            <p className="text-gray-400 text-lg font-light mb-12">
-                                Order your favorite Karahi online or reserve a table and
-                                experience the legacy of fire and spice in person.
-                            </p>
-                            <div className="space-y-6">
-                                <div className="flex items-center gap-6">
-                                    <div className="w-12 h-12 rounded-full border border-primary/20 flex items-center justify-center text-primary">
-                                        📍
-                                    </div>
-                                    <p className="text-white text-sm tracking-widest uppercase">
-                                        97 Wilmslow Road, Manchester
-                                    </p>
-                                </div>
-                                <div className="flex items-center gap-6">
-                                    <div className="w-12 h-12 rounded-full border border-primary/20 flex items-center justify-center text-primary">
-                                        📞
-                                    </div>
-                                    <p className="text-white text-sm tracking-widest uppercase">
-                                        +44 161 123 4567
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <OrderForm />
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <Footer />
         </main>

@@ -20,7 +20,6 @@ interface CartContextType {
     cartCount: number;
     isCartOpen: boolean;
     setIsCartOpen: (open: boolean) => void;
-    isDiscountActive: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -28,28 +27,6 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isCartOpen, setIsCartOpen] = useState(false);
-    const [isDiscountActive, setIsDiscountActive] = useState(false);
-
-    // Check for UK discount time (6 PM - 8 PM)
-    useEffect(() => {
-        const checkDiscount = () => {
-            const now = new Date();
-            // Get UK time string: "HH"
-            const ukHour = new Intl.DateTimeFormat("en-GB", {
-                timeZone: "Europe/London",
-                hour: "numeric",
-                hour12: false,
-            }).format(now);
-
-            const hour = parseInt(ukHour);
-            // 6 PM to 8 PM (18:00 - 19:59)
-            setIsDiscountActive(hour >= 18 && hour < 20);
-        };
-
-        checkDiscount();
-        const interval = setInterval(checkDiscount, 60000); // Check every minute
-        return () => clearInterval(interval);
-    }, []);
 
     useEffect(() => {
         const savedCart = localStorage.getItem("bk_cart");
@@ -103,7 +80,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         return sum + (isNaN(price) ? 0 : price * item.quantity);
     }, 0);
 
-    const totalAmount = isDiscountActive ? rawTotal * 0.9 : rawTotal;
+    const totalAmount = rawTotal;
 
     const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -119,7 +96,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
                 cartCount,
                 isCartOpen,
                 setIsCartOpen,
-                isDiscountActive,
             }}
         >
             {children}

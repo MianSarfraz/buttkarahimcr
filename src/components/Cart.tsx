@@ -6,7 +6,7 @@ import { X, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import OrderForm from "./OrderForm";
 
 const Cart = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-    const { cartItems, removeFromCart, updateQuantity, totalAmount, cartCount, isDiscountActive } = useCart();
+    const { cartItems, removeFromCart, updateQuantity, totalAmount, cartCount } = useCart();
     const [showOrderForm, setShowOrderForm] = useState(false);
 
     if (!isOpen) return null;
@@ -120,24 +120,10 @@ const Cart = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => 
                         {/* Footer */}
                         {cartItems.length > 0 && !showOrderForm && (
                             <div className="p-6 bg-card-bg/50 backdrop-blur-xl border-t border-white/5 space-y-4">
-                                {isDiscountActive && (
-                                    <div className="flex items-center justify-between py-2 px-4 bg-primary/10 border border-primary/20 rounded-lg animate-pulse-subtle">
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-lg">🌙</span>
-                                            <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Ramadan Offer Applied</span>
-                                        </div>
-                                        <span className="text-[10px] font-bold text-primary">-10%</span>
-                                    </div>
-                                )}
 
                                 <div className="flex justify-between items-center text-gray-400 text-xs uppercase tracking-widest">
                                     <span>Subtotal</span>
                                     <div className="flex flex-col items-end">
-                                        {isDiscountActive && (
-                                            <span className="text-gray-500 line-through text-xs mb-1">
-                                                £{(totalAmount / 0.9).toFixed(2)}
-                                            </span>
-                                        )}
                                         <span className="text-white font-bold text-lg">£{totalAmount.toFixed(2)}</span>
                                     </div>
                                 </div>

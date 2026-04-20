@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1474688928660459539/W692Zh8vYJFDdN127bLurgXGkw7XfIpcEJtWjRgA7xv7MUEaP445-i4hsz0jW6nMQuUK";
+const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1495825000639496386/KG7QoIsl-HGVqZ291FvVbXYKsHNQR-vy7YeAPj31DKlhyNeF-8CIR35jFH-y1rZZI0Fm";
 const TARGET_EMAIL = "sarfraznawaz266@gmail.com";
 
 const BookingForm = ({ onClose }: { onClose?: () => void }) => {

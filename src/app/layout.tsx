@@ -25,6 +25,9 @@ import { CartProvider } from "@/context/CartContext";
 export const metadata: Metadata = {
     title: "Butt Karahi | Authentic Dining",
     description: "The Master of Karahi - Authentic Pakistani Dining in Manchester",
+    icons: {
+        icon: "/favicon-256 (1).png",
+    },
 };
 
 export default function RootLayout({

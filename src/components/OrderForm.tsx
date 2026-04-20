@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 
 const OrderForm = ({ onClose }: { onClose?: () => void }) => {
-    const { cartItems, totalAmount, clearCart, isDiscountActive } = useCart();
+    const { cartItems, totalAmount, clearCart } = useCart();
     const [formData, setFormData] = useState({
         name: "",
         phone: "",
@@ -30,7 +30,7 @@ const OrderForm = ({ onClose }: { onClose?: () => void }) => {
         setStatus("sending");
 
         const orderNumber = `BK-${Math.floor(1000 + Math.random() * 9000)}`;
-        const discordWebhookUrl = "https://discord.com/api/webhooks/1474688928660459539/W692Zh8vYJFDdN127bLurgXGkw7XfIpcEJtWjRgA7xv7MUEaP445-i4hsz0jW6nMQuUK";
+        const discordWebhookUrl = "https://discord.com/api/webhooks/1495825000639496386/KG7QoIsl-HGVqZ291FvVbXYKsHNQR-vy7YeAPj31DKlhyNeF-8CIR35jFH-y1rZZI0Fm";
         const targetEmail = "sarfraznawaz266@gmail.com";
 
         // 1. Send to Discord
@@ -45,7 +45,6 @@ const OrderForm = ({ onClose }: { onClose?: () => void }) => {
                         { name: "📞 Phone", value: formData.phone, inline: true },
                         { name: "🍔 Items", value: formData.items },
                         { name: "💰 Total", value: `£${totalAmount.toFixed(2)}`, inline: true },
-                        { name: "🎁 Discount", value: isDiscountActive ? "10% OFF Applied" : "None", inline: true },
                         { name: "📍 Address", value: formData.address },
                     ],
                     timestamp: new Date().toISOString(),
@@ -62,7 +61,6 @@ const OrderForm = ({ onClose }: { onClose?: () => void }) => {
             phone: formData.phone,
             items: formData.items,
             total: `£${totalAmount.toFixed(2)}`,
-            discount_applied: isDiscountActive ? "10% OFF" : "No",
             address: formData.address,
             _captcha: "false",
             _template: "table"

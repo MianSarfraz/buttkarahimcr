@@ -9,14 +9,16 @@ import { Flip } from "gsap/all";
 const categories = ["All", "Interior", "Food", "Street", "Videos"];
 
 const galleryItems = [
-    { id: 1, category: "Interior", image: "https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=1200", size: "large" },
-    { id: 2, category: "Food", image: "https://images.pexels.com/photos/9609844/pexels-photo-9609844.jpeg?auto=compress&cs=tinysrgb&w=800", size: "medium" },
-    { id: 3, category: "Street", image: "https://images.pexels.com/photos/2696064/pexels-photo-2696064.jpeg?auto=compress&cs=tinysrgb&w=800", size: "medium" },
-    { id: 4, category: "Food", image: "https://images.pexels.com/photos/4958792/pexels-photo-4958792.jpeg?auto=compress&cs=tinysrgb&w=800", size: "small" },
-    { id: 5, category: "Food", image: "https://images.pexels.com/photos/2474661/pexels-photo-2474661.jpeg?auto=compress&cs=tinysrgb&w=800", size: "medium" },
-    { id: 6, category: "Interior", image: "https://images.pexels.com/photos/1579739/pexels-photo-1579739.jpeg?auto=compress&cs=tinysrgb&w=1200", size: "large" },
-    { id: 7, category: "Food", image: "https://images.pexels.com/photos/6210747/pexels-photo-6210747.jpeg?auto=compress&cs=tinysrgb&w=800", size: "medium" },
-    { id: 8, category: "Street", image: "https://images.pexels.com/photos/3184183/pexels-photo-3184183.jpeg?auto=compress&cs=tinysrgb&w=800", size: "small" },
+    { id: 1, category: "Interior", image: "/gallary4.jpg", size: "large" },
+    { id: 2, category: "Interior", image: "/gallary5.jpg", size: "medium" },
+    { id: 3, category: "Street", image: "/Gallery1.jpg", size: "medium" },
+    { id: 4, category: "Food", image: "/gallary6.jpg", size: "small" },
+    { id: 5, category: "Interior", image: "/Gallery.jpg", size: "medium" },
+    { id: 6, category: "Interior", image: "/gallery2.jpg", size: "large" },
+    { id: 7, category: "Food", image: "/10.jpg", size: "medium" },
+    { id: 8, category: "Food", image: "/gallary7.jpg", size: "small" },
+    { id: 9, category: "Food", image: "/gallary8.jpg", size: "medium" },
+    { id: 10, category: "Food", image: "/gallary49.jpg", size: "small" },
 ];
 
 const videos = [
@@ -62,7 +64,7 @@ export default function GalleryPage() {
             <header className="relative py-32 md:py-48 flex items-center justify-center overflow-hidden border-b border-white/5">
                 <div className="absolute inset-0 z-0">
                     <img
-                        src="https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                        src="/gallary5.jpg"
                         className="w-full h-full object-cover opacity-40 scale-110 grayscale"
                         alt="Gallery Background"
                     />

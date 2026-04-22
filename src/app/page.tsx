@@ -126,6 +126,7 @@ export default function Home() {
                 <div className="relative z-20 text-center px-4 w-full h-full flex flex-col items-center justify-center">
                     <div className="flex flex-col items-center justify-center gap-6 md:gap-10 mt-10">
                         <h1 className="font-display text-white leading-[0.9] drop-shadow-[0_4px_4px_rgba(0,0,0,0.9)] scale-up-anim">
+                            <span className="sr-only">Butt Karahi - Authentic Pakistani Restaurant in Manchester</span>
                             <span className="block text-4xl sm:text-6xl md:text-8xl lg:text-9xl mb-2">
                                 THE MASTER
                             </span>
@@ -177,7 +178,7 @@ export default function Home() {
                         <div className="relative z-10 img-zoom-container rounded-sm overflow-hidden border-b-4 border-primary shadow-2xl">
                             <img
                                 src="https://images.pexels.com/photos/3338497/pexels-photo-3338497.jpeg?auto=compress&cs=tinysrgb&w=1200"
-                                alt="Chef"
+                                alt="Chef preparing authentic Pakistani cuisine at Butt Karahi Manchester"
                                 className="w-full h-[300px] md:h-[500px] object-cover filter grayscale contrast-125 hover:grayscale-0 transition-all duration-700 mx-auto"
                             />
                         </div>
@@ -207,19 +208,19 @@ export default function Home() {
                             {/* Plate 1 */}
                             <div className="orbit-plate absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 sm:w-20 sm:h-20 md:w-56 md:h-56">
                                 <div className="w-full h-full rounded-full overflow-hidden border-[2px] md:border-[4px] border-[#151515] shadow-glow relative bg-black">
-                                    <img src="https://images.pexels.com/photos/9609844/pexels-photo-9609844.jpeg?auto=compress&cs=tinysrgb&w=400" className="w-full h-full object-cover transform scale-110" alt="Special 1" />
+                                    <img src="https://images.pexels.com/photos/9609844/pexels-photo-9609844.jpeg?auto=compress&cs=tinysrgb&w=400" className="w-full h-full object-cover transform scale-110" alt="Authentic Chicken Karahi at Butt Karahi Manchester" />
                                 </div>
                             </div>
                             {/* Plate 2 */}
                             <div className="orbit-plate absolute top-[75%] left-[93.3%] -translate-x-1/2 -translate-y-1/2 w-14 h-14 sm:w-20 sm:h-20 md:w-56 md:h-56">
                                 <div className="w-full h-full rounded-full overflow-hidden border-[2px] md:border-[4px] border-[#151515] shadow-glow relative bg-black">
-                                    <img src="https://images.pexels.com/photos/2474661/pexels-photo-2474661.jpeg?auto=compress&cs=tinysrgb&w=400" className="w-full h-full object-cover transform scale-110" alt="Special 2" />
+                                    <img src="https://images.pexels.com/photos/2474661/pexels-photo-2474661.jpeg?auto=compress&cs=tinysrgb&w=400" className="w-full h-full object-cover transform scale-110" alt="Sizzling Lamb Karahi - Butt Karahi Specialty" />
                                 </div>
                             </div>
                             {/* Plate 3 */}
                             <div className="orbit-plate absolute top-[75%] left-[6.7%] -translate-x-1/2 -translate-y-1/2 w-14 h-14 sm:w-20 sm:h-20 md:w-56 md:h-56">
                                 <div className="w-full h-full rounded-full overflow-hidden border-[2px] md:border-[4px] border-[#151515] shadow-glow relative bg-black">
-                                    <img src="https://images.pexels.com/photos/4958792/pexels-photo-4958792.jpeg?auto=compress&cs=tinysrgb&w=400" className="w-full h-full object-cover transform scale-110" alt="Special 3" />
+                                    <img src="https://images.pexels.com/photos/4958792/pexels-photo-4958792.jpeg?auto=compress&cs=tinysrgb&w=400" className="w-full h-full object-cover transform scale-110" alt="Freshly cooked Pakistani Karahi on open flame" />
                                 </div>
                             </div>
                         </div>
@@ -375,7 +376,7 @@ export default function Home() {
             <section className="relative py-40 flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     <img src="https://instagram.flyp2-1.fna.fbcdn.net/v/t51.82787-15/603041618_17844074406656141_3772029273287348375_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=Mzc5MjQxNjc5Njg2Nzk2MDY2MQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjEwODB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=Nk842tWqlogQ7kNvwGTddlh&_nc_oc=AdnihPozlRV6Njb2Y5PQvx76jgUFJL2Jwsl-IUvWyKmmM0rD44-1_ld4oLHrBE17t1n56nkC_iHjZC5qGd2_DVN8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.flyp2-1.fna&_nc_gid=ki6G3Snq77n6zDBHLmnS6w&_nc_ss=8&oh=00_AfyKWEK0XY-d7XCkVOHMlBvUHZ8qeCjXt6v7pWFOWf9TXg&oe=69B4A4A6"
-                        className="w-full h-full object-cover grayscale brightness-[0.4]" alt="Spices" />
+                        className="w-full h-full object-cover grayscale brightness-[0.4]" alt="Traditional Pakistani Spices used at Butt Karahi Manchester" />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#020202] via-[#020202]/80 to-transparent"></div>
                 </div>
 

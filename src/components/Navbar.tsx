@@ -32,9 +32,9 @@ const Navbar = () => {
                     {/* Logo */}
                     <Link href="/" className="group flex flex-col items-start relative z-50" onClick={handleNavClick}>
                         <div className="flex flex-col items-center drop-shadow-md">
-                            <h1 className="logo-text-mimic text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-none">
+                            <div className="logo-text-mimic text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-none">
                                 Butt Karahi
-                            </h1>
+                            </div>
                             <span className="text-[7px] md:text-[10px] font-bold uppercase tracking-wide text-white mt-1 shadow-black drop-shadow-md">
                                 97 Wilmslow Road - Manchester
                             </span>

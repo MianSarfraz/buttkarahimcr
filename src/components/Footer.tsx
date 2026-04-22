@@ -98,14 +98,14 @@ const Footer = () => {
                     </div>
                 </div>
                 <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-widest text-gray-600 gap-4">
-                    <p>© 2024 Butt Karahi. All Rights Reserved.</p>
+                    <p>© 2025 Butt Karahi. All Rights Reserved.</p>
                     <div className="flex gap-8">
-                        <span className="hover:text-primary transition-colors">
+                        <Link href="/privacy-policy" className="hover:text-primary transition-colors cursor-pointer">
                             Privacy Policy
-                        </span>
-                        <span className="hover:text-primary transition-colors">
+                        </Link>
+                        <Link href="/terms-and-conditions" className="hover:text-primary transition-colors cursor-pointer">
                             Terms of Service
-                        </span>
+                        </Link>
                     </div>
                 </div>
             </div>

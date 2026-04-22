@@ -1,0 +1,11 @@
+# Robots.txt for Butt Karahi - https://www.buttkarahi.co
+
+User-agent: *
+Allow: /
+
+# Disallow private/system paths
+Disallow: /api/
+Disallow: /_next/
+
+# Sitemap location
+Sitemap: https://www.buttkarahi.co/sitemap.xml

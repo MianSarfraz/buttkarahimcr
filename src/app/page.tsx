@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BookingForm from "@/components/BookingForm";
 import { useCart } from "@/context/CartContext";
-import { Plus, ShoppingBag } from "lucide-react";
+import { Plus, ShoppingBag, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -61,6 +61,57 @@ const FeaturedItemContent = ({ name, desc, image, variants }: { name: string, de
         </>
     );
 };
+
+const signatures = [
+    {
+        name: "Desi Chicken Karahi",
+        desc: "Butt Special Organic Chicken cooked in traditional spices.",
+        image: "/Desi Chicken Karahi-100.jpg.jpeg",
+        variants: [{ size: "½ Kg", price: "£19.99" }, { size: "1 Kg", price: "£39.99" }]
+    },
+    {
+        name: "Lamb Karahi",
+        desc: "Slow-cooked tender lamb in rich aromatic spices.",
+        image: "/Lamb Karahi Butt Special -100.jpg.jpeg",
+        variants: [{ size: "½ Kg", price: "£21.99" }, { size: "1 Kg", price: "£41.99" }]
+    },
+    {
+        name: "Mix Grill",
+        desc: "Assorted grilled meats served with salad & Afghan naan.",
+        image: "/Mix Grill Platter-100.jpg.jpeg",
+        variants: [{ size: "Large", price: "£29.99" }]
+    },
+    {
+        name: "Chapli Kabab Special",
+        desc: "3 Chapli Kababs + 2 Naan. Served with fresh salad & sauce.",
+        image: "/Chapli kabab-100.jpg.jpeg",
+        variants: [{ size: "Large", price: "£21.99" }]
+    },
+    {
+        name: "BBQ Platter",
+        desc: "Combination of Charsi Tikka, Chops, Chicken Leg & more.",
+        image: "/bbq platter -100.jpg.jpeg",
+        variants: [{ size: "Serves 2-4", price: "£41.99" }]
+    },
+    {
+        name: "Kabuli Pulao",
+        desc: "Traditional Afghan rice with carrots and raisins.",
+        image: "/kabuli pulao-100.jpg.jpeg",
+        variants: [{ size: "Large", price: "£11.99" }]
+    },
+    {
+        name: "Charsi Tikka",
+        desc: "Succulent charsi-style tikka skewers.",
+        image: "/Charsi TikkaCharsi Tikka-100.jpg.jpeg",
+        variants: [{ size: "1 Kg", price: "£33.99" }]
+    },
+    {
+        name: "Finger Fish",
+        desc: "Crispy fried fresh fish fingers.",
+        image: "/finger fish-100.jpg.jpeg",
+        variants: [{ size: "Large", price: "£21.99" }]
+    }
+];
 
 export default function Home() {
     const { addToCart } = useCart();
@@ -294,71 +345,53 @@ export default function Home() {
                             Signatures
                         </h2>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {/* Card 1: Desi Chicken Karahi */}
-                        <div className="group relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 border border-white/5 hover:border-primary/30">
-                            <div className="w-full h-48 md:h-64 overflow-hidden rounded-xl mb-6 relative">
-                                <img
-                                    src="/Desi Chicken Karahi-100.jpg.jpeg"
-                                    alt="Desi Chicken Karahi"
-                                    className="w-full h-full object-cover img-zoom transform scale-100 group-hover:scale-110 transition-transform duration-700"
-                                />
-                            </div>
-                            <FeaturedItemContent
-                                name="Desi Chicken Karahi"
-                                desc="Butt Special Organic Chicken cooked in traditional spices."
-                                image="/Desi Chicken Karahi-100.jpg.jpeg"
-                                variants={[{ size: "½ Kg", price: "£19.99" }, { size: "1 Kg", price: "£39.99" }]}
-                            />
+                    <div className="relative group">
+                        <div 
+                            id="signature-slider"
+                            className="flex gap-8 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-10 -mx-4 px-4 md:mx-0 md:px-0"
+                            style={{ scrollBehavior: 'smooth' }}
+                        >
+                            {signatures.map((item, idx) => (
+                                <div 
+                                    key={idx}
+                                    className="min-w-[280px] md:min-w-[320px] lg:min-w-[350px] snap-center group/card relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 border border-white/5 hover:border-primary/30"
+                                >
+                                    <div className="w-full h-48 md:h-64 overflow-hidden rounded-xl mb-6 relative">
+                                        <img
+                                            src={item.image}
+                                            alt={item.name}
+                                            className="w-full h-full object-cover img-zoom transform scale-100 group-hover/card:scale-110 transition-transform duration-700"
+                                        />
+                                    </div>
+                                    <FeaturedItemContent
+                                        name={item.name}
+                                        desc={item.desc}
+                                        image={item.image}
+                                        variants={item.variants}
+                                    />
+                                </div>
+                            ))}
                         </div>
-                        {/* Card 2: Lamb Karahi */}
-                        <div className="group relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 border border-white/5 hover:border-primary/30">
-                            <div className="w-full h-48 md:h-64 overflow-hidden rounded-xl mb-6 relative">
-                                <img
-                                    src="/Lamb Karahi Butt Special -100.jpg.jpeg"
-                                    alt="Lamb Karahi"
-                                    className="w-full h-full object-cover img-zoom transform scale-100 group-hover:scale-110 transition-transform duration-700"
-                                />
-                            </div>
-                            <FeaturedItemContent
-                                name="Lamb Karahi"
-                                desc="Slow-cooked tender lamb in rich aromatic spices."
-                                image="/Lamb Karahi Butt Special -100.jpg.jpeg"
-                                variants={[{ size: "½ Kg", price: "£21.99" }, { size: "1 Kg", price: "£41.99" }]}
-                            />
-                        </div>
-                        {/* Card 3: Mix Grill */}
-                        <div className="group relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 border border-white/5 hover:border-primary/30">
-                            <div className="w-full h-48 md:h-64 overflow-hidden rounded-xl mb-6 relative">
-                                <img
-                                    src="/Mix Grill Platter-100.jpg.jpeg"
-                                    alt="Mix Grill"
-                                    className="w-full h-full object-cover img-zoom transform scale-100 group-hover:scale-110 transition-transform duration-700"
-                                />
-                            </div>
-                            <FeaturedItemContent
-                                name="Mix Grill"
-                                desc="Assorted grilled meats served with salad & Afghan naan."
-                                image="/Mix Grill Platter-100.jpg.jpeg"
-                                variants={[{ size: "Large", price: "£29.99" }]}
-                            />
-                        </div>
-                        {/* Card 4: Chapli Kabab Special */}
-                        <div className="group relative bg-card-bg p-6 rounded-2xl hover:bg-[#151515] transition-colors duration-500 border border-white/5 hover:border-primary/30">
-                            <div className="w-full h-48 md:h-64 overflow-hidden rounded-xl mb-6 relative">
-                                <img
-                                    src="/Chapli kabab-100.jpg.jpeg"
-                                    alt="Chapli Kabab Special"
-                                    className="w-full h-full object-cover img-zoom transform scale-100 group-hover:scale-110 transition-transform duration-700"
-                                />
-                            </div>
-                            <FeaturedItemContent
-                                name="Chapli Kabab Special"
-                                desc="3 Chapli Kababs + 2 Naan. Served with fresh salad & sauce."
-                                image="/Chapli kabab-100.jpg.jpeg"
-                                variants={[{ size: "Large", price: "£21.99" }]}
-                            />
-                        </div>
+
+                        {/* Navigation Buttons */}
+                        <button 
+                            onClick={() => {
+                                const slider = document.getElementById('signature-slider');
+                                if (slider) slider.scrollLeft -= 400;
+                            }}
+                            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-10 hidden lg:flex shadow-glow"
+                        >
+                            <ChevronLeft className="w-6 h-6" />
+                        </button>
+                        <button 
+                            onClick={() => {
+                                const slider = document.getElementById('signature-slider');
+                                if (slider) slider.scrollLeft += 400;
+                            }}
+                            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-10 hidden lg:flex shadow-glow"
+                        >
+                            <ChevronRight className="w-6 h-6" />
+                        </button>
                     </div>
                     <div className="mt-20 text-center">
                         <Link

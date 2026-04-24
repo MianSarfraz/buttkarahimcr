@@ -110,10 +110,11 @@ export const metadata: Metadata = {
     // ── Favicon / Icons ───────────────────────────────────────────────────
     icons: {
         icon: [
-            { url: "/favicon-256 (1).png", sizes: "256x256", type: "image/png" },
+            { url: "/favicon.png", sizes: "256x256", type: "image/png" },
         ],
-        apple: "/favicon-256 (1).png",
+        apple: "/favicon.png",
     },
+    manifest: "/manifest.json",
 
     // ── Verification (add your Search Console token here) ─────────────────
     // verification: {
@@ -129,7 +130,7 @@ const restaurantSchema = {
     name: "Butt Karahi",
     alternateName: "Butt Karahi MCR",
     url: SITE_URL,
-    logo: `${SITE_URL}/favicon-256 (1).png`,
+    logo: `${SITE_URL}/favicon.png`,
     image: [
         `${SITE_URL}/gallary4.jpg`,
         `${SITE_URL}/Gallery1.jpg`,

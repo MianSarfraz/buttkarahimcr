@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
+import { supabase } from "@/lib/supabase";
 
 const OrderForm = ({ onClose }: { onClose?: () => void }) => {
     const { cartItems, totalAmount, clearCart } = useCart();
@@ -68,7 +69,7 @@ const OrderForm = ({ onClose }: { onClose?: () => void }) => {
 
         try {
             // Simultaneous delivery
-            const [discordRes, emailRes] = await Promise.all([
+            const promises: Promise<any>[] = [
                 fetch(discordWebhookUrl, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -79,7 +80,20 @@ const OrderForm = ({ onClose }: { onClose?: () => void }) => {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(formSubmitData),
                 })
-            ]);
+            ];
+            
+            if (supabase) {
+                promises.push(Promise.resolve(supabase.from('orders').insert({
+                    customer_name: formData.name,
+                    customer_phone: formData.phone,
+                    items: cartItems,
+                    total: totalAmount,
+                    address: formData.address,
+                    status: 'pending'
+                })));
+            }
+            
+            const [discordRes, emailRes] = await Promise.all(promises) as [Response, Response, any?];
 
             if (discordRes.ok || emailRes.ok) {
                 setStatus("success");

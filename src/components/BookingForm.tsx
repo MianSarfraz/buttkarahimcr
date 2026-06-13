@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1495825000639496386/KG7QoIsl-HGVqZ291FvVbXYKsHNQR-vy7YeAPj31DKlhyNeF-8CIR35jFH-y1rZZI0Fm";
 const TARGET_EMAIL = "sarfraznawaz266@gmail.com";
@@ -66,7 +67,7 @@ const BookingForm = ({ onClose }: { onClose?: () => void }) => {
         };
 
         try {
-            const [discordRes, emailRes] = await Promise.all([
+            const promises: Promise<any>[] = [
                 fetch(DISCORD_WEBHOOK, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -76,8 +77,22 @@ const BookingForm = ({ onClose }: { onClose?: () => void }) => {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(emailPayload),
-                }),
-            ]);
+                })
+            ];
+            
+            if (supabase) {
+                promises.push(Promise.resolve(supabase.from('bookings').insert({
+                    customer_name: formData.name,
+                    customer_phone: formData.phone,
+                    date: formData.date,
+                    time: formData.time,
+                    guests: formData.persons,
+                    notes: formData.requests,
+                    status: 'pending'
+                })));
+            }
+            
+            const [discordRes, emailRes] = await Promise.all(promises) as [Response, Response, any?];
 
             if (discordRes.ok || emailRes.ok) {
                 setStatus("success");

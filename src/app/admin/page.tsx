@@ -1,17 +1,32 @@
 'use client'
 
-import { useState } from 'react'
-import { loginAdmin } from './actions'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Eye, EyeOff, Lock, Utensils } from 'lucide-react'
 
 export default function AdminLogin() {
   const [error, setError] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+  const router = useRouter()
 
-  const handleSubmit = async (formData: FormData) => {
-    const result = await loginAdmin(formData)
-    if (result?.error) {
-      setError(result.error)
+  useEffect(() => {
+    // If already logged in, redirect to dashboard directly
+    if (localStorage.getItem('admin_auth_session') === 'true') {
+      router.push('/admin/dashboard')
+    }
+  }, [router])
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const password = formData.get('password') as string
+    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || 'Buttkarahi@1122'
+
+    if (password === adminPassword) {
+      localStorage.setItem('admin_auth_session', 'true')
+      router.push('/admin/dashboard')
+    } else {
+      setError('Invalid password')
     }
   }
 
@@ -30,7 +45,7 @@ export default function AdminLogin() {
         <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-3xl shadow-2xl">
           <h2 className="text-2xl font-bold text-white text-center mb-8">Sign In</h2>
 
-          <form action={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <label className="block text-sm font-medium text-orange-100 ml-1">Password</label>
               <div className="relative">

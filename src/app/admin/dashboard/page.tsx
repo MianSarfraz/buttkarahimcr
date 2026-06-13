@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import {
   Clock,
@@ -19,7 +20,6 @@ import {
   DollarSign,
   Users
 } from 'lucide-react'
-import { logoutAdmin } from '../actions'
 
 type Order = {
   id: string
@@ -58,6 +58,8 @@ type TimeEntry = {
 }
 
 export default function AdminDashboard() {
+  const router = useRouter()
+  const [isAuth, setIsAuth] = useState(false)
   const [activeTab, setActiveTab] = useState<'orders' | 'bookings' | 'employees' | 'time'>('orders')
   const [orders, setOrders] = useState<Order[]>([])
   const [bookings, setBookings] = useState<Booking[]>([])
@@ -73,6 +75,11 @@ export default function AdminDashboard() {
   const [manualClockOut, setManualClockOut] = useState('')
   const [expandedEmployeeId, setExpandedEmployeeId] = useState<string | null>(null)
   const [weekOffset, setWeekOffset] = useState(0)
+
+  const handleLogout = () => {
+    localStorage.removeItem('admin_auth_session')
+    router.push('/admin')
+  }
 
   const fetchData = useCallback(async () => {
     if (!supabase) return
@@ -97,8 +104,13 @@ export default function AdminDashboard() {
   }, [])
 
   useEffect(() => {
-    fetchData()
-  }, [fetchData])
+    if (localStorage.getItem('admin_auth_session') !== 'true') {
+      router.push('/admin')
+    } else {
+      setIsAuth(true)
+      fetchData()
+    }
+  }, [router, fetchData])
 
   // Employee functions
   const addEmployee = async (e: React.FormEvent) => {
@@ -313,6 +325,10 @@ export default function AdminDashboard() {
 
   const stats = getStats()
 
+  if (!isAuth) {
+    return null // Render nothing or loading until authorization is verified
+  }
+
   if (!supabase) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-900">
@@ -320,7 +336,7 @@ export default function AdminDashboard() {
           <Utensils className="w-16 h-16 text-orange-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-white mb-2">Supabase Not Configured</h1>
           <button
-            onClick={() => logoutAdmin()}
+            onClick={handleLogout}
             className="mt-4 bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition"
           >
             Go Back
@@ -341,7 +357,7 @@ export default function AdminDashboard() {
             <h1 className="text-xl font-bold text-white">Butt Karahi Admin</h1>
           </div>
           <button
-            onClick={() => logoutAdmin()}
+            onClick={handleLogout}
             className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-4 py-2 rounded-lg transition border border-slate-700"
           >
             <LogOut size={18} />

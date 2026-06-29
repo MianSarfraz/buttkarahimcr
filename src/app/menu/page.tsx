@@ -144,7 +144,6 @@ const menuItems: Record<string, MenuItem[]> = {
 
 const MenuItemCard = ({ item }: { item: MenuItem }) => {
     const [selectedVariant, setSelectedVariant] = useState(item.variants[0]);
-    const { addToCart } = useCart();
 
     return (
         <div className="menu-item flex flex-col md:flex-row gap-6 group hover:bg-white/[0.02] p-4 rounded-xl transition-colors duration-500">
@@ -191,20 +190,9 @@ const MenuItemCard = ({ item }: { item: MenuItem }) => {
                         </div>
                     )}
 
-                    <button
-                        onClick={() =>
-                            addToCart({
-                                id: `${item.name}-${selectedVariant.size}`,
-                                name: `${item.name} (${selectedVariant.size})`,
-                                price: selectedVariant.price,
-                                image: item.image,
-                            })
-                        }
-                        className="flex-1 min-w-[140px] bg-white text-black hover:bg-primary hover:text-white transition-all duration-300 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2"
-                    >
-                        <ShoppingBag className="w-3 h-3" />
-                        Add to Order
-                    </button>
+                    <div className="flex-1 min-w-[140px] bg-gray-800/50 border border-gray-700 text-gray-400 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2">
+                        Online Orders Coming Soon
+                    </div>
                 </div>
             </div>
         </div>

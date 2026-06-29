@@ -2,32 +2,34 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Eye, EyeOff, Lock, Utensils } from 'lucide-react'
+import { Lock, Utensils } from 'lucide-react'
+import AdminDashboard from './dashboard/page'
 
-export default function AdminLogin() {
+export default function AdminPage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [showPassword, setShowPassword] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    // If already logged in, redirect to dashboard directly
-    if (localStorage.getItem('admin_auth_session') === 'true') {
-      router.push('/admin/dashboard')
-    }
-  }, [router])
+    setIsLoggedIn(localStorage.getItem('admin_auth_session') === 'true')
+  }, [])
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    const password = formData.get('password') as string
-    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || 'Buttkarahi@1122'
+    const pin = formData.get('pin') as string
+    const adminPin = process.env.NEXT_PUBLIC_ADMIN_PIN || '266786'
 
-    if (password === adminPassword) {
+    if (pin === adminPin) {
       localStorage.setItem('admin_auth_session', 'true')
-      router.push('/admin/dashboard')
+      setIsLoggedIn(true)
     } else {
-      setError('Invalid password')
+      setError('Invalid PIN')
     }
+  }
+
+  if (isLoggedIn) {
+    return <AdminDashboard />
   }
 
   return (
@@ -43,27 +45,21 @@ export default function AdminLogin() {
         </div>
 
         <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-3xl shadow-2xl">
-          <h2 className="text-2xl font-bold text-white text-center mb-8">Sign In</h2>
+          <h2 className="text-2xl font-bold text-white text-center mb-8">Enter PIN</h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-orange-100 ml-1">Password</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  className="w-full px-5 py-4 bg-white/10 border border-white/30 rounded-2xl text-white placeholder-orange-200/50 focus:outline-none focus:ring-4 focus:ring-orange-500/30 focus:border-orange-500 transition-all"
-                  placeholder="Enter admin password"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-orange-200 hover:text-white transition-colors"
-                >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-              </div>
+              <label className="block text-sm font-medium text-orange-100 ml-1">PIN</label>
+              <input
+                type="password"
+                name="pin"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={6}
+                className="w-full px-5 py-4 bg-white/10 border border-white/30 rounded-2xl text-white placeholder-orange-200/50 focus:outline-none focus:ring-4 focus:ring-orange-500/30 focus:border-orange-500 transition-all text-center text-2xl tracking-[0.5em]"
+                placeholder="••••••"
+                required
+              />
             </div>
 
             {error && (

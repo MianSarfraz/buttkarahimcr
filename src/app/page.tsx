@@ -13,7 +13,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const FeaturedItemContent = ({ name, desc, image, variants }: { name: string, desc: string, image: string, variants: { size: string, price: string }[] }) => {
     const [selectedVariant, setSelectedVariant] = useState(variants[0]);
-    const { addToCart } = useCart();
 
     return (
         <>
@@ -46,17 +45,9 @@ const FeaturedItemContent = ({ name, desc, image, variants }: { name: string, de
                     </div>
                 )}
 
-                <button
-                    onClick={() => addToCart({
-                        id: `${name}-${selectedVariant.size}`,
-                        name: `${name} (${selectedVariant.size})`,
-                        price: selectedVariant.price,
-                        image: image
-                    })}
-                    className="w-full flex items-center justify-center gap-2 py-4 bg-white/5 border border-white/10 rounded-full text-white text-[10px] font-bold uppercase tracking-widest hover:bg-primary hover:border-primary transition-all duration-300 shadow-lg"
-                >
-                    <ShoppingBag className="w-3 h-3" /> Add to Order
-                </button>
+                <div className="w-full flex items-center justify-center gap-2 py-4 bg-gray-800/50 border border-gray-700 rounded-full text-gray-400 text-[10px] font-bold uppercase tracking-widest shadow-lg">
+                    Online Orders Coming Soon
+                </div>
             </div>
         </>
     );

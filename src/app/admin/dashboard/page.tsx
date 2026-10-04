@@ -438,7 +438,7 @@ export default function AdminDashboard() {
             onClick={handleLogout}
             className="flex items-center gap-1.5 sm:gap-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 sm:px-4 py-2 rounded-lg transition border border-slate-700 text-xs sm:text-sm"
           >
-            <LogOut size={14} sm={{ size: 18 }} />
+            <LogOut className="h-4 w-4 sm:h-5 sm:w-5" />
             <span className="hidden sm:inline">Logout</span>
           </button>
         </div>

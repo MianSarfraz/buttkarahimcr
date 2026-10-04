@@ -109,9 +109,9 @@ const Footer = () => {
                 </div>
                 <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-widest text-gray-600 gap-4">
                     <p>© 2025 Butt Karahi. All Rights Reserved.</p>
-                    <p>
-                        Crafted with care by{" "}
-                        <a href="https://inloopmcr.com/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                    <p className="text-white font-medium tracking-[0.18em] uppercase text-[10px]">
+                        Designed & built by{" "}
+                        <a href="https://inloopmcr.com/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-primary transition-colors font-semibold underline-offset-4 underline">
                             Inloop
                         </a>
                     </p>
